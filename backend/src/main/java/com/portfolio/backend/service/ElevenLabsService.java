@@ -46,7 +46,7 @@ public class ElevenLabsService {
             // Build request payload
             ObjectNode rootNode = objectMapper.createObjectNode();
             rootNode.put("text", text);
-            rootNode.put("model_id", "eleven_monolingual_v1");
+            rootNode.put("model_id", "eleven_multilingual_v2");
             
             ObjectNode voiceSettings = rootNode.putObject("voice_settings");
             voiceSettings.put("stability", 0.5);
