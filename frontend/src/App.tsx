@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Navbar } from './components/Navbar';
 import { Hero } from './components/Hero';
+import { ChatRoom } from './components/ChatRoom';
 import { About } from './components/About';
 import { ExperienceComponent } from './components/Experience';
 import { Projects } from './components/Projects';
@@ -64,7 +65,7 @@ function App() {
 
   // IntersectionObserver to set active section
   useEffect(() => {
-    const sections = ['home', 'about', 'experience', 'projects', 'contact'];
+    const sections = ['home', 'ai-room', 'about', 'experience', 'projects', 'contact'];
     
     const observerOptions = {
       root: null,
@@ -104,6 +105,7 @@ function App() {
       
       <main className="relative">
         <Hero />
+        <ChatRoom />
         
         <About 
           skills={skills} 

@@ -111,7 +111,21 @@ export const Projects: React.FC<ProjectsProps> = ({ projects, isLoading, error }
                     )}
 
                     {/* Links */}
-                    <div className="flex items-center gap-4 pt-4 border-t border-slate-800/80">
+                    <div className="flex items-center gap-3 pt-4 border-t border-slate-800/80">
+                      <button 
+                        onClick={() => {
+                          const event = new CustomEvent('ask-avatar', { detail: `Tell me more about the ${project.title} project.` });
+                          window.dispatchEvent(event);
+                          const el = document.getElementById('ai-room');
+                          if (el) {
+                            const offsetTop = el.getBoundingClientRect().top + window.scrollY - 80;
+                            window.scrollTo({ top: offsetTop, behavior: 'smooth' });
+                          }
+                        }}
+                        className="flex items-center gap-1 px-2.5 py-1.5 bg-indigo-600/10 hover:bg-indigo-600/20 text-indigo-400 hover:text-indigo-300 border border-indigo-500/20 rounded-md text-[11px] font-semibold transition-all cursor-pointer"
+                      >
+                        Ask AI Double
+                      </button>
                       {project.githubUrl && (
                         <a 
                           href={project.githubUrl}

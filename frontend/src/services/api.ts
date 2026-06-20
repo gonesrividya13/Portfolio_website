@@ -24,3 +24,9 @@ export const sendContactMessage = async (message: ContactMessage): Promise<Conta
   const response = await api.post<ContactMessage>('/api/contact', message);
   return response.data;
 };
+
+export const chatWithAvatar = async (message: string): Promise<string> => {
+  const response = await api.post<{ response: string }>('/api/chat', { message });
+  return response.data.response;
+};
+
