@@ -9,196 +9,292 @@ export const Avatar: React.FC<AvatarProps> = ({ state }) => {
     <div className="relative flex flex-col items-center justify-center w-72 h-72">
       {/* Outer ambient glow */}
       <div 
-        className={`absolute inset-4 rounded-full transition-all duration-1000 blur-2xl opacity-40 ${
+        className={`absolute inset-4 rounded-full transition-all duration-1000 blur-2xl opacity-45 ${
           state === 'thinking' 
-            ? 'bg-purple-600 animate-pulse scale-105' 
+            ? 'bg-purple-600/50 animate-pulse scale-105' 
             : state === 'speaking' 
-              ? 'bg-rose-500 scale-100' 
-              : 'bg-blue-600 scale-95'
+              ? 'bg-rose-500/40 scale-100' 
+              : 'bg-indigo-600/35 scale-95'
         }`}
       />
 
       {/* SVG Face Container */}
       <svg 
         viewBox="0 0 200 200" 
-        className={`w-64 h-64 z-10 drop-shadow-[0_0_20px_rgba(139,92,246,0.3)] transition-all duration-500 ${
-          state === 'thinking' ? 'animate-bounce' : ''
-        }`}
-        style={{ animationDuration: state === 'thinking' ? '3s' : '0s' }}
+        className={`w-64 h-64 z-10 drop-shadow-[0_4px_24px_rgba(0,0,0,0.4)] transition-all duration-500`}
       >
         <defs>
-          {/* Gradients */}
-          <radialGradient id="faceGlow" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="#1e1b4b" />
-            <stop offset="100%" stopColor="#090514" />
+          {/* Ambient Lighting Gradients */}
+          <radialGradient id="ringGlow" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stopColor="#1e152a" />
+            <stop offset="100%" stopColor="#080710" />
           </radialGradient>
           
-          <linearGradient id="cyberBorder" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#8b5cf6" />
-            <stop offset="50%" stopColor="#3b82f6" />
-            <stop offset="100%" stopColor="#ec4899" />
+          <linearGradient id="cyberRing" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#c084fc" />
+            <stop offset="50%" stopColor="#6366f1" />
+            <stop offset="100%" stopColor="#f43f5e" />
           </linearGradient>
 
-          <filter id="neonGlow" x="-20%" y="-20%" width="140%" height="140%">
-            <feGaussianBlur stdDeviation="3" result="blur" />
-            <feMerge>
-              <feMergeNode in="blur" />
-              <feMergeNode in="SourceGraphic" />
-            </feMerge>
+          <filter id="vectorShadow" x="-10%" y="-10%" width="120%" height="120%">
+            <feDropShadow dx="0" dy="2" stdDeviation="3" floodOpacity="0.3" />
           </filter>
         </defs>
 
-        {/* Outer Circular frame */}
+        {/* Outer Tech Ring frame */}
         <circle 
           cx="100" 
           cy="100" 
           r="92" 
-          fill="url(#faceGlow)" 
-          stroke="url(#cyberBorder)" 
-          strokeWidth="3" 
-          className="transition-all duration-500"
+          fill="url(#ringGlow)" 
+          stroke="url(#cyberRing)" 
+          strokeWidth="2.5" 
         />
 
-        {/* Ambient grid mesh pattern behind head (cyberpunk aesthetic) */}
-        <g opacity="0.15">
-          <line x1="40" y1="20" x2="40" y2="180" stroke="#8b5cf6" strokeWidth="1" />
-          <line x1="80" y1="20" x2="80" y2="180" stroke="#8b5cf6" strokeWidth="1" />
-          <line x1="120" y1="20" x2="120" y2="180" stroke="#8b5cf6" strokeWidth="1" />
-          <line x1="160" y1="20" x2="160" y2="180" stroke="#8b5cf6" strokeWidth="1" />
-          <line x1="20" y1="40" x2="180" y2="40" stroke="#8b5cf6" strokeWidth="1" />
-          <line x1="20" y1="80" x2="180" y2="80" stroke="#8b5cf6" strokeWidth="1" />
-          <line x1="20" y1="120" x2="180" y2="120" stroke="#8b5cf6" strokeWidth="1" />
-          <line x1="20" y1="160" x2="180" y2="160" stroke="#8b5cf6" strokeWidth="1" />
+        {/* Ambient background particles/mesh */}
+        <g opacity="0.12">
+          <circle cx="60" cy="50" r="1.5" fill="#c084fc" />
+          <circle cx="140" cy="60" r="1.5" fill="#f43f5e" />
+          <circle cx="40" cy="120" r="1" fill="#6366f1" />
+          <circle cx="160" cy="130" r="2" fill="#c084fc" />
+          <path d="M 30 100 Q 100 130 170 100" fill="none" stroke="#6366f1" strokeWidth="0.5" />
+          <path d="M 40 80 Q 100 50 160 80" fill="none" stroke="#c084fc" strokeWidth="0.5" />
         </g>
 
-        {/* Glowing Aura Ring (pulsing in thinking/speaking) */}
+        {/* Outer Circular Ring (spin animation) */}
         <circle 
           cx="100" 
           cy="100" 
-          r="80" 
+          r="84" 
           fill="none" 
           stroke={
             state === 'thinking' 
               ? '#c084fc' 
               : state === 'speaking' 
                 ? '#f43f5e' 
-                : '#60a5fa'
+                : '#6366f1'
           } 
-          strokeWidth="1.5" 
-          strokeDasharray="6, 12"
+          strokeWidth="1" 
+          strokeDasharray="4, 10"
           className={`origin-center ${
             state === 'thinking' 
-              ? 'animate-[spin_8s_linear_infinite]' 
+              ? 'animate-[spin_10s_linear_infinite]' 
               : state === 'speaking' 
-                ? 'animate-[spin_12s_linear_infinite]' 
-                : 'animate-[spin_20s_linear_infinite]'
+                ? 'animate-[spin_15s_linear_infinite]' 
+                : 'animate-[spin_25s_linear_infinite]'
           }`}
         />
 
-        {/* Head Group with idle breathing animation */}
+        {/* ==================== PORTRAIT GROUPS ==================== */}
+        
+        {/* HAIR BACK LAYER (Flowing behind shoulders) */}
+        <path 
+          d="M 60 80 C 40 100 35 130 40 185 L 160 185 C 165 130 160 100 140 80 C 130 70 70 70 60 80 Z" 
+          fill="#0c0a0f" 
+        />
+        <path 
+          d="M 50 100 C 40 115 38 135 43 185 L 157 185 C 162 135 160 115 150 100 C 145 92 135 80 120 75 Z" 
+          fill="#131017" 
+        />
+
+        {/* NECK */}
+        <path 
+          d="M 88 120 C 88 135 90 148 100 148 C 110 148 112 135 112 120 Z" 
+          fill="#b87a5a" 
+        />
+        <path 
+          d="M 88 120 C 88 135 100 142 100 142 C 100 142 112 135 112 120 Z" 
+          fill="#a06649" 
+        />
+
+        {/* CHEST / COLLAR / SKIN UPPER SECTION */}
+        <path 
+          d="M 68 150 C 68 150 82 172 100 172 C 118 172 132 150 132 150 L 140 185 L 60 185 Z" 
+          fill="#c78765" 
+        />
+
+        {/* ORANGE TOP (With scoop neckline, matching photo) */}
+        <path 
+          d="M 56 185 C 56 168 64 160 76 160 C 84 160 90 168 100 168 C 110 168 116 160 124 160 C 136 160 144 168 144 185 L 152 210 L 48 210 Z" 
+          fill="#ea580c" 
+          filter="url(#vectorShadow)"
+        />
+
+        {/* GOLD CHAIN & PENDANT (Necklace matching photo) */}
+        <path 
+          d="M 85 142 Q 100 164 115 142" 
+          fill="none" 
+          stroke="#fbbf24" 
+          strokeWidth="1.2" 
+        />
+        {/* Pendant loop and small circular crescent star pendant */}
+        <line x1="100" y1="163" x2="100" y2="165" stroke="#fbbf24" strokeWidth="1" />
+        <circle cx="100" cy="166" r="2.5" fill="#f59e0b" />
+        <circle cx="101.2" cy="165.2" r="2" fill="#c78765" opacity="0.9" />
+
+        {/* ==================== HEAD GROUP (Breathing Animation) ==================== */}
         <g 
-          className={`origin-center transition-transform duration-1000 ${
-            state === 'speaking' ? 'animate-[headSpeak_0.5s_infinite_alternate_ease-in-out]' : 'animate-[breathe_4s_infinite_ease-in-out]'
+          className={`origin-[100px_90px] transition-transform duration-1000 ${
+            state === 'speaking' ? 'animate-[portraitSpeak_0.6s_infinite_alternate_ease-in-out]' : 'animate-[portraitBreathe_4s_infinite_ease-in-out]'
           }`}
         >
-          {/* Neck */}
-          <rect x="90" y="135" width="20" height="25" rx="5" fill="#1e1b4b" stroke="#3b82f6" strokeWidth="1.5" />
-          <line x1="90" y1="145" x2="110" y2="145" stroke="#3b82f6" strokeWidth="1" />
+          {/* EARRINGS (Silver/White Hoops matching photo) */}
+          <circle cx="67" cy="100" r="4.5" fill="none" stroke="#e2e8f0" strokeWidth="1.5" />
+          <circle cx="133" cy="100" r="4.5" fill="none" stroke="#e2e8f0" strokeWidth="1.5" />
 
-          {/* Ears / Side Nodes */}
-          <circle cx="50" cy="95" r="8" fill="#3b82f6" opacity="0.8" filter="url(#neonGlow)" />
-          <circle cx="150" cy="95" r="8" fill="#3b82f6" opacity="0.8" filter="url(#neonGlow)" />
-          <rect x="42" y="90" width="10" height="10" rx="2" fill="#1e1b4b" />
-          <rect x="148" y="90" width="10" height="10" rx="2" fill="#1e1b4b" />
-
-          {/* Robot Head Frame */}
-          <rect 
-            x="56" 
-            y="50" 
-            width="88" 
-            height="90" 
-            rx="25" 
-            fill="#090514" 
-            stroke="url(#cyberBorder)" 
-            strokeWidth="2.5" 
+          {/* FACE OVAL */}
+          <path 
+            d="M 68 85 C 68 62 82 54 100 54 C 118 54 132 62 132 85 C 132 108 120 125 100 125 C 80 125 68 108 68 85 Z" 
+            fill="#cf8b67" 
           />
 
-          {/* Inner Face Screen */}
-          <rect 
-            x="64" 
-            y="58" 
-            width="72" 
-            height="74" 
-            rx="18" 
-            fill="#150e28" 
-            stroke="#271c4c" 
+          {/* SOFT CHEEK BLUSH */}
+          <ellipse cx="80" cy="102" rx="7" ry="4" fill="#e11d48" opacity="0.12" />
+          <ellipse cx="120" cy="102" rx="7" ry="4" fill="#e11d48" opacity="0.12" />
+
+          {/* NOSE */}
+          <path 
+            d="M 98 94 Q 100 102 102 102 Q 100 102 98 102" 
+            fill="none" 
+            stroke="#9f6244" 
             strokeWidth="1.5" 
+            strokeLinecap="round" 
           />
 
-          {/* Eyes Group with blinking animation */}
+          {/* EYEBROWS */}
+          <path 
+            d="M 77 78 Q 85 73 92 78" 
+            fill="none" 
+            stroke="#1a1420" 
+            strokeWidth="2.5" 
+            strokeLinecap="round" 
+          />
+          <path 
+            d="M 108 78 Q 115 73 123 78" 
+            fill="none" 
+            stroke="#1a1420" 
+            strokeWidth="2.5" 
+            strokeLinecap="round" 
+          />
+
+          {/* EYES (Blinking eyes matching shape) */}
           <g>
             {/* Left Eye */}
-            <ellipse 
-              cx="82" 
-              cy="85" 
-              rx="8" 
-              ry={state === 'thinking' ? '2' : '8'}
-              fill={
-                state === 'thinking' 
-                  ? '#c084fc' 
-                  : state === 'speaking' 
-                    ? '#f43f5e' 
-                    : '#3b82f6'
-              }
-              filter="url(#neonGlow)"
-              className="origin-[82px_85px] animate-[blink_5s_infinite_ease-in-out]"
+            <ellipse cx="85" cy="85" rx="7.5" ry="6" fill="#ffffff" />
+            <circle cx="85" cy="85" r="4.5" fill="#1b120f" />
+            <circle cx="86.5" cy="83.5" r="1.2" fill="#ffffff" />
+            <path 
+              d="M 76 85 Q 85 80 94 85" 
+              fill="none" 
+              stroke="#130b0a" 
+              strokeWidth="1.8" 
             />
-            {/* Right Eye */}
+            {/* Eyelid Blink Cover */}
             <ellipse 
-              cx="118" 
+              cx="85" 
               cy="85" 
               rx="8" 
-              ry={state === 'thinking' ? '2' : '8'}
-              fill={
-                state === 'thinking' 
-                  ? '#c084fc' 
-                  : state === 'speaking' 
-                    ? '#f43f5e' 
-                    : '#3b82f6'
-              }
-              filter="url(#neonGlow)"
-              className="origin-[118px_85px] animate-[blink_5s_infinite_ease-in-out]"
+              ry="0.1" 
+              fill="#cf8b67" 
+              stroke="#130b0a"
+              strokeWidth="0.8"
+              className="origin-[85px_79px] animate-[portraitBlink_4.5s_infinite_ease-in-out]" 
+            />
+
+            {/* Right Eye */}
+            <ellipse cx="115" cy="85" rx="7.5" ry="6" fill="#ffffff" />
+            <circle cx="115" cy="85" r="4.5" fill="#1b120f" />
+            <circle cx="116.5" cy="83.5" r="1.2" fill="#ffffff" />
+            <path 
+              d="M 106 85 Q 115 80 124 85" 
+              fill="none" 
+              stroke="#130b0a" 
+              strokeWidth="1.8" 
+            />
+            {/* Eyelid Blink Cover */}
+            <ellipse 
+              cx="115" 
+              cy="85" 
+              rx="8" 
+              ry="0.1" 
+              fill="#cf8b67" 
+              stroke="#130b0a"
+              strokeWidth="0.8"
+              className="origin-[115px_79px] animate-[portraitBlink_4.5s_infinite_ease-in-out]" 
             />
           </g>
 
-          {/* Mouth Section */}
+          {/* MOUTH / LIPS (Morphing Lip-sync animation) */}
           <g className="origin-[100px_112px]">
             {state === 'speaking' ? (
-              // Talking dynamic waveforms
-              <path 
-                d="M 80 112 Q 90 102 100 112 T 120 112"
-                fill="none" 
-                stroke="#f43f5e" 
-                strokeWidth="4" 
-                strokeLinecap="round"
-                className="animate-[mouthTalk_0.15s_infinite_alternate_ease-in-out]"
-              />
+              // Speaking mouth shape (open lips showing warm pink)
+              <g>
+                <path 
+                  d="M 88 112 Q 100 124 112 112 C 112 112 100 128 88 112 Z" 
+                  fill="#991b1b" 
+                />
+                <path 
+                  d="M 88 112 Q 100 106 112 112 Q 100 126 88 112 Z" 
+                  fill="none" 
+                  stroke="#db2777" 
+                  strokeWidth="3.5" 
+                  strokeLinecap="round" 
+                  className="animate-[portraitMouthTalk_0.16s_infinite_alternate_ease-in-out]"
+                />
+              </g>
             ) : state === 'thinking' ? (
-              // Thinking slight curved line
-              <circle cx="100" cy="112" r="3" fill="#c084fc" filter="url(#neonGlow)" />
-            ) : (
-              // Idle flat smile line
+              // Thinking slight gentle smile
               <path 
-                d="M 84 112 Q 100 118 116 112" 
+                d="M 90 113 Q 100 116 110 113" 
                 fill="none" 
-                stroke="#60a5fa" 
-                strokeWidth="3.5" 
+                stroke="#db2777" 
+                strokeWidth="4" 
                 strokeLinecap="round" 
-                filter="url(#neonGlow)"
               />
+            ) : (
+              // Idle natural friendly smile matching photo lips
+              <g>
+                {/* Lip color outline */}
+                <path 
+                  d="M 88 112 Q 100 121 112 112" 
+                  fill="none" 
+                  stroke="#db2777" 
+                  strokeWidth="4.5" 
+                  strokeLinecap="round" 
+                />
+                {/* Inner smile dividing line */}
+                <path 
+                  d="M 89 112 Q 100 117 111 112" 
+                  fill="none" 
+                  stroke="#881337" 
+                  strokeWidth="1.2" 
+                />
+              </g>
             )}
           </g>
         </g>
+
+        {/* HAIR FRONT LAYER (Frames the face, overlaying eyebrows/ears, matching hairstyle) */}
+        <path 
+          d="M 64 80 C 64 65 72 44 100 44 C 128 44 136 65 136 80 C 136 95 133 115 130 145 C 124 115 125 90 124 82 C 120 62 102 58 92 70 C 86 78 84 100 81 125 C 78 115 76 95 72 145 C 68 115 64 95 64 80 Z" 
+          fill="#17131e" 
+        />
+        {/* Glossy highlights on hair */}
+        <path 
+          d="M 76 58 Q 92 48 108 58" 
+          fill="none" 
+          stroke="#312e3f" 
+          strokeWidth="2.5" 
+          opacity="0.6" 
+          strokeLinecap="round"
+        />
+        <path 
+          d="M 122 80 C 121 100 122 115 124 130" 
+          fill="none" 
+          stroke="#262135" 
+          strokeWidth="2.0" 
+          opacity="0.8" 
+        />
       </svg>
 
       {/* Speech Audio Waveform Bars underneath */}
@@ -211,7 +307,7 @@ export const Avatar: React.FC<AvatarProps> = ({ state }) => {
                 ? 'bg-rose-500 shadow-[0_0_10px_rgba(244,63,94,0.5)]'
                 : state === 'thinking'
                   ? 'bg-purple-500 animate-pulse shadow-[0_0_10px_rgba(168,85,247,0.5)]'
-                  : 'bg-blue-600/30'
+                  : 'bg-indigo-500/20'
             }`}
             style={{
               height: state === 'speaking' 
@@ -220,7 +316,7 @@ export const Avatar: React.FC<AvatarProps> = ({ state }) => {
                   ? '16px' 
                   : '6px',
               animation: state === 'speaking' 
-                ? `bounceWave 0.5s infinite alternate ease-in-out` 
+                ? `portraitBounceWave 0.5s infinite alternate ease-in-out` 
                 : 'none',
               animationDelay: `${i * 0.08}s`
             }}
@@ -230,23 +326,23 @@ export const Avatar: React.FC<AvatarProps> = ({ state }) => {
 
       {/* CSS Animation Keyframes Injector */}
       <style>{`
-        @keyframes breathe {
-          0%, 100% { transform: translateY(0); }
-          50% { transform: translateY(-5px); }
+        @keyframes portraitBreathe {
+          0%, 100% { transform: translateY(0) scale(1); }
+          50% { transform: translateY(-4px) scale(0.99); }
         }
-        @keyframes blink {
-          0%, 96%, 100% { transform: scaleY(1); }
-          98% { transform: scaleY(0.1); }
+        @keyframes portraitBlink {
+          0%, 95%, 100% { ry: 0.1; }
+          97.5% { ry: 6.5; }
         }
-        @keyframes mouthTalk {
-          0% { d: path("M 80 112 Q 90 98 100 112 T 120 112"); }
-          100% { d: path("M 80 112 Q 90 126 100 112 T 120 112"); }
+        @keyframes portraitMouthTalk {
+          0% { d: path("M 88 112 Q 100 106 112 112 Q 100 126 88 112 Z"); }
+          100% { d: path("M 88 112 Q 100 106 112 112 Q 100 114 88 112 Z"); }
         }
-        @keyframes headSpeak {
+        @keyframes portraitSpeak {
           0% { transform: translateY(0) scale(1); }
-          100% { transform: translateY(-2px) scale(1.02); }
+          100% { transform: translateY(-1.5px) scale(1.015); }
         }
-        @keyframes bounceWave {
+        @keyframes portraitBounceWave {
           0% { transform: scaleY(0.3); }
           100% { transform: scaleY(1.3); }
         }
