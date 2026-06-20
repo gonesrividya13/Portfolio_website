@@ -27,6 +27,7 @@ export const ChatRoom: React.FC = () => {
   
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const synthesisUtteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
   
   // Keep sendMessage ref updated for event listener usage
   const sendMessageRef = useRef<(text: string) => Promise<void>>(() => Promise.resolve());
@@ -84,19 +85,11 @@ export const ChatRoom: React.FC = () => {
   }, []);
 
   // Handle Speech Synthesis boundary (speaking state)
-  const speakText = (text: string) => {
-    if (!speechEnabled) return;
-
-    // Cancel any current speech
+  const speakTextNative = (cleanText: string) => {
     window.speechSynthesis.cancel();
-
-    // Clean text of markdown format (asterisks, bullet points) for clear TTS
-    const cleanText = text.replace(/[*_`#\-]/g, ' ').trim();
-
     const utterance = new SpeechSynthesisUtterance(cleanText);
     synthesisUtteranceRef.current = utterance;
 
-    // Try to find a nice English voice
     const voices = window.speechSynthesis.getVoices();
     const englishVoice = voices.find(v => v.lang.startsWith('en') && v.name.includes('Google')) 
       || voices.find(v => v.lang.startsWith('en')) 
@@ -121,15 +114,58 @@ export const ChatRoom: React.FC = () => {
     window.speechSynthesis.speak(utterance);
   };
 
+  const speakText = (text: string) => {
+    if (!speechEnabled) return;
+
+    // Cancel any active speech or audio
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current = null;
+    }
+    window.speechSynthesis.cancel();
+
+    const cleanText = text.replace(/[*_`#\-]/g, ' ').trim();
+
+    // Try playing custom cloned voice from backend endpoint
+    const audioUrl = `/api/speech?text=${encodeURIComponent(cleanText)}`;
+    const audio = new Audio(audioUrl);
+    audioRef.current = audio;
+
+    audio.onplay = () => {
+      setAvatarState('speaking');
+    };
+
+    audio.onended = () => {
+      setAvatarState('idle');
+    };
+
+    audio.onerror = () => {
+      // Fallback if custom voice is not configured or fails
+      speakTextNative(cleanText);
+    };
+
+    audio.play().catch((err) => {
+      console.warn("Custom voice playback failed, falling back to native TTS:", err);
+      speakTextNative(cleanText);
+    });
+  };
+
   // Silence avatar on unmount or when sound is toggled off
   useEffect(() => {
     return () => {
+      if (audioRef.current) {
+        audioRef.current.pause();
+      }
       window.speechSynthesis.cancel();
     };
   }, []);
 
   const toggleSound = () => {
     if (speechEnabled) {
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current = null;
+      }
       window.speechSynthesis.cancel();
       setSpeechEnabled(false);
       if (avatarState === 'speaking') {
