@@ -82,8 +82,6 @@ public class GeminiWebSocketHandler extends TextWebSocketHandler {
                     ArrayNode parts = systemInstruction.putArray("parts");
                     parts.addObject().put("text", geminiService.compileSystemInstructions());
 
-                    webSocket.sendText(objectMapper.writeValueAsString(root), true).join();
-                    
                     // Force an initial greeting
                     ObjectNode initialMessage = objectMapper.createObjectNode();
                     ObjectNode clientContent = initialMessage.putObject("clientContent");
@@ -93,7 +91,10 @@ public class GeminiWebSocketHandler extends TextWebSocketHandler {
                     turn.putArray("parts").addObject().put("text", "Hello! Please briefly introduce yourself in one sentence so I know your audio is working.");
                     clientContent.put("turnComplete", true);
                     
-                    webSocket.sendText(objectMapper.writeValueAsString(initialMessage), true).join();
+                    synchronized (webSocket) {
+                        webSocket.sendText(objectMapper.writeValueAsString(root), true).join();
+                        webSocket.sendText(objectMapper.writeValueAsString(initialMessage), true).join();
+                    }
                 } catch (Exception e) {
                     System.err.println("Error sending setup message: " + e.getMessage());
                 }
