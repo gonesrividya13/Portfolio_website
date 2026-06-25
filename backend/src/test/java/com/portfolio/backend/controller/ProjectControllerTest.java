@@ -19,9 +19,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.portfolio.backend.security.JwtAuthFilter;
 import com.portfolio.backend.security.SecurityConfig;
 import org.springframework.context.annotation.Import;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 
 @WebMvcTest(ProjectController.class)
 @Import(SecurityConfig.class)
+@AutoConfigureMockMvc(addFilters = false)
 public class ProjectControllerTest {
 
     @Autowired
