@@ -149,6 +149,38 @@ public class GeminiService {
         return sb.toString();
     }
 
+    public JsonNode generateEphemeralToken() {
+        String activeKey = (apiKey == null || apiKey.trim().isEmpty()) ? System.getenv("GEMINI_API_KEY") : apiKey;
+
+        if (activeKey == null || activeKey.trim().isEmpty()) {
+            throw new RuntimeException("Gemini API key is not configured.");
+        }
+
+        try {
+            String apiUrl = "https://generativelanguage.googleapis.com/v1alpha/models/gemini-2.5-flash-native-audio-latest:generateEphemeralToken?key=" + activeKey;
+            
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+            HttpEntity<String> entity = new HttpEntity<>("{}", headers);
+
+            ResponseEntity<String> response = restTemplate.postForEntity(apiUrl, entity, String.class);
+
+            if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
+                String body = response.getBody();
+                System.out.println("Ephemeral Token API Response: " + body);
+                JsonNode json = objectMapper.readTree(body);
+                String generatedToken = json.path("token").asText();
+                System.out.println("Main API Key starts with: " + activeKey.substring(0, Math.min(8, activeKey.length())));
+                System.out.println("Ephemeral Token starts with: " + generatedToken.substring(0, Math.min(8, generatedToken.length())));
+                return json;
+            }
+            throw new RuntimeException("Failed to generate ephemeral token. Status: " + response.getStatusCode());
+        } catch (Exception e) {
+            System.err.println("Error calling generateEphemeralToken: " + e.getMessage());
+            throw new RuntimeException("Failed to generate ephemeral token", e);
+        }
+    }
+
     private String generateMockResponse(String userPrompt) {
         String prompt = userPrompt.toLowerCase();
         

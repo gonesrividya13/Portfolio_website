@@ -30,3 +30,8 @@ export const chatWithAvatar = async (message: string): Promise<string> => {
   return response.data.response;
 };
 
+export const getLiveChatToken = async (): Promise<{ token: string; systemInstruction: string }> => {
+  const response = await api.get<{ token: string; systemInstruction: string }>('/api/chat/live-token');
+  return response.data;
+};
+

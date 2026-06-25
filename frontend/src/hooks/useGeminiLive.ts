@@ -1,4 +1,5 @@
 import { useState, useRef, useCallback, useEffect } from 'react';
+import { getLiveChatToken } from '../services/api';
 
 export const useGeminiLive = () => {
   const [isConnected, setIsConnected] = useState(false);
@@ -114,13 +115,37 @@ export const useGeminiLive = () => {
       source.connect(workletNode);
       workletNode.connect(ctx.destination); // Required for worklet to process, though we don't output mic audio
 
-      // 4. Connect WebSocket to Spring Boot proxy
-      const wsUrl = import.meta.env.VITE_WS_URL || `ws://${window.location.host}/api/live-chat`;
+      // 4. Fetch Ephemeral Token
+      const { token, systemInstruction } = await getLiveChatToken();
+
+      // 5. Connect directly to Gemini
+      const wsUrl = `wss://generativelanguage.googleapis.com/ws/google.ai.generativelanguage.v1alpha.GenerativeService.BidiGenerateContent?key=${token}`;
       const ws = new WebSocket(wsUrl);
       wsRef.current = ws;
 
       ws.onopen = () => {
         setIsConnected(true);
+
+        // Send Setup Message
+        ws.send(JSON.stringify({
+          setup: {
+            model: "models/gemini-2.5-flash-native-audio-latest",
+            generationConfig: {
+              responseModalities: ["AUDIO"],
+              speechConfig: {
+                voiceConfig: {
+                  prebuiltVoiceConfig: {
+                    voiceName: "Aoede"
+                  }
+                }
+              }
+            },
+            systemInstruction: {
+              parts: [{ text: systemInstruction }]
+            }
+          }
+        }));
+
         // Start sending mic data
         workletNode.port.onmessage = (event) => {
           if (ws.readyState === WebSocket.OPEN) {

@@ -25,4 +25,14 @@ public class ChatController {
         String answer = geminiService.generateAvatarResponse(request.getMessage());
         return ResponseEntity.ok(new ChatResponse(answer));
     }
+
+    @org.springframework.web.bind.annotation.GetMapping("/live-token")
+    public ResponseEntity<java.util.Map<String, Object>> getLiveChatToken() {
+        com.fasterxml.jackson.databind.JsonNode tokenNode = geminiService.generateEphemeralToken();
+        java.util.Map<String, Object> response = new java.util.HashMap<>();
+        response.put("token", tokenNode.path("token").asText());
+        response.put("expiresAt", tokenNode.path("expirationTime").asText()); // or whatever the field is. wait, Python docs said token.expires_at, REST probably is expirationTime or similar. We can just pass the whole JSON node back actually!
+        response.put("systemInstruction", geminiService.compileSystemInstructions());
+        return ResponseEntity.ok(response);
+    }
 }

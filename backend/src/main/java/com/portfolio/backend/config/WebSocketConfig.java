@@ -9,15 +9,14 @@ import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry
 @EnableWebSocket
 public class WebSocketConfig implements WebSocketConfigurer {
 
-    private final GeminiWebSocketHandler geminiWebSocketHandler;
+    // private final GeminiWebSocketHandler geminiWebSocketHandler;
 
-    public WebSocketConfig(GeminiWebSocketHandler geminiWebSocketHandler) {
-        this.geminiWebSocketHandler = geminiWebSocketHandler;
+    public WebSocketConfig() {
+        // Handlers removed for direct Gemini connection
     }
 
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-        registry.addHandler(geminiWebSocketHandler, "/api/live-chat")
-                .setAllowedOrigins("*");
+        // No local websocket handlers anymore
     }
 }

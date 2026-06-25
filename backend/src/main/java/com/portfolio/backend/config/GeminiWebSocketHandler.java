@@ -19,7 +19,7 @@ import java.util.Map;
 import java.util.concurrent.CompletionStage;
 import java.util.concurrent.ConcurrentHashMap;
 
-@Component
+// @Component
 public class GeminiWebSocketHandler extends TextWebSocketHandler {
 
     private final GeminiService geminiService;
