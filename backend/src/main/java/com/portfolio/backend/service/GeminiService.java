@@ -96,7 +96,7 @@ public class GeminiService {
         }
     }
 
-    private String compileSystemInstructions() {
+    public String compileSystemInstructions() {
         List<Project> projects = projectRepository.findAll();
         List<Skill> skills = skillRepository.findAll();
         List<Experience> experiences = experienceRepository.findAll();
