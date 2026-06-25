@@ -244,7 +244,7 @@ export const AwsSandbox = () => {
               </div>
               
               <AnimatePresence>
-                {response && (
+                {response !== null && (
                   <motion.div 
                     initial={{ opacity: 0, y: 10, scale: 0.95 }} 
                     animate={{ opacity: 1, y: 0, scale: 1 }} 
