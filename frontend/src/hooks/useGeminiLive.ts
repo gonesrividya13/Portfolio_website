@@ -75,9 +75,14 @@ export const useGeminiLive = () => {
     };
   };
 
-  const handleWebSocketMessage = (event: MessageEvent) => {
+  const handleWebSocketMessage = async (event: MessageEvent) => {
     try {
-      const data = JSON.parse(event.data);
+      let messageText = event.data;
+      if (event.data instanceof Blob) {
+        messageText = await event.data.text();
+      }
+      
+      const data = JSON.parse(messageText);
       if (data.serverContent && data.serverContent.modelTurn) {
         const parts = data.serverContent.modelTurn.parts;
         for (const part of parts) {
