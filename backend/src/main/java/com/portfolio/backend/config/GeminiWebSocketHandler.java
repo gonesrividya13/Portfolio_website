@@ -82,7 +82,7 @@ public class GeminiWebSocketHandler extends TextWebSocketHandler {
                     ArrayNode parts = systemInstruction.putArray("parts");
                     parts.addObject().put("text", geminiService.compileSystemInstructions());
 
-                    webSocket.sendText(objectMapper.writeValueAsString(root), true);
+                    webSocket.sendText(objectMapper.writeValueAsString(root), true).join();
                 } catch (Exception e) {
                     System.err.println("Error sending setup message: " + e.getMessage());
                 }
@@ -138,7 +138,9 @@ public class GeminiWebSocketHandler extends TextWebSocketHandler {
         WebSocket geminiSocket = geminiSessions.get(session.getId());
         if (geminiSocket != null) {
             // Forward message from client to Gemini API
-            geminiSocket.sendText(message.getPayload(), true);
+            synchronized (geminiSocket) {
+                geminiSocket.sendText(message.getPayload(), true).join();
+            }
         }
     }
 
