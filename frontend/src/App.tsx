@@ -9,6 +9,9 @@ import { Contact } from './components/Contact';
 import { Footer } from './components/Footer';
 import { getProjects, getSkills, getExperiences } from './services/api';
 import type { Project, Skill, Experience } from './types';
+import { SwaggerResume } from './components/SwaggerResume';
+import { DispatchVisualizer } from './components/DispatchVisualizer';
+import { AwsSandbox } from './components/AwsSandbox';
 
 function App() {
   const [activeSection, setActiveSection] = useState('home');
@@ -68,7 +71,7 @@ function App() {
 
   // IntersectionObserver to set active section
   useEffect(() => {
-    const sections = ['home', 'ai-room', 'about', 'experience', 'projects', 'contact'];
+    const sections = ['home', 'ai-room', 'architecture', 'about', 'experience', 'projects', 'contact'];
     
     const observerOptions = {
       root: null,
@@ -109,6 +112,23 @@ function App() {
       <main className="relative">
         <Hero />
         <ChatRoom />
+
+        <section id="architecture" className="py-20 relative px-4 sm:px-6 lg:px-8">
+          <div className="max-w-7xl mx-auto">
+            <div className="text-center mb-16">
+              <h2 className="text-4xl md:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-indigo-500 mb-4 tracking-tight">
+                Backend & Architecture Showcase
+              </h2>
+              <p className="text-lg text-slate-400 max-w-2xl mx-auto">
+                Interact with the systems that power this portfolio. From distributed event pipelines to simulated cloud workflows.
+              </p>
+            </div>
+            
+            <SwaggerResume />
+            <DispatchVisualizer />
+            <AwsSandbox />
+          </div>
+        </section>
         
         <About 
           skills={skills} 
