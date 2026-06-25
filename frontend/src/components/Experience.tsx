@@ -10,7 +10,7 @@ interface ExperienceProps {
 
 export const ExperienceComponent: React.FC<ExperienceProps> = ({ experiences, isLoading, error }) => {
   
-  const formatDate = (dateVal: any) => {
+  const formatDate = (dateVal: string | number[] | null) => {
     if (!dateVal) return 'Present';
     
     if (Array.isArray(dateVal)) {
@@ -32,12 +32,12 @@ export const ExperienceComponent: React.FC<ExperienceProps> = ({ experiences, is
 
   // Sort experiences by start date descending
   const sortedExperiences = [...experiences].sort((a, b) => {
-    const getYear = (val: any) => {
+    const getYear = (val: string | number[] | null) => {
       if (Array.isArray(val)) return val[0];
       if (typeof val === 'string') return new Date(val).getFullYear();
       return 0;
     };
-    const getMonth = (val: any) => {
+    const getMonth = (val: string | number[] | null) => {
       if (Array.isArray(val)) return val[1];
       if (typeof val === 'string') return new Date(val).getMonth() + 1;
       return 0;

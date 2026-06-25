@@ -311,7 +311,7 @@ export const Avatar: React.FC<AvatarProps> = ({ state }) => {
             }`}
             style={{
               height: state === 'speaking' 
-                ? `${Math.max(10, Math.floor(Math.random() * 40))}px` 
+                ? `${[24, 38, 16, 32, 20, 12][i] || 20}px` 
                 : state === 'thinking' 
                   ? '16px' 
                   : '6px',

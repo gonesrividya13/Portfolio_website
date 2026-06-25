@@ -67,7 +67,7 @@ export const Contact: React.FC = () => {
         message: 'Your message has been sent successfully! Thank you for reaching out.',
       });
       setFormData({ name: '', email: '', message: '' });
-    } catch (err: any) {
+    } catch (err) {
       console.error(err);
       setStatus({
         type: 'error',

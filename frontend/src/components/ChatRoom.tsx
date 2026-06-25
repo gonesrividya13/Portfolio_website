@@ -10,6 +10,11 @@ interface Message {
   timestamp: Date;
 }
 
+let messageIdCounter = 0;
+const generateMessageId = () => {
+  return `msg-${Date.now()}-${++messageIdCounter}`;
+};
+
 export const ChatRoom: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([
     {
@@ -23,6 +28,7 @@ export const ChatRoom: React.FC = () => {
   const [avatarState, setAvatarState] = useState<'idle' | 'thinking' | 'speaking'>('idle');
   const [isListening, setIsListening] = useState(false);
   const [speechEnabled, setSpeechEnabled] = useState(false);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [recognition, setRecognition] = useState<any>(null);
   
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -52,6 +58,7 @@ export const ChatRoom: React.FC = () => {
 
   // Initialize Speech Recognition
   useEffect(() => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
     if (SpeechRecognition) {
       const rec = new SpeechRecognition();
@@ -63,14 +70,16 @@ export const ChatRoom: React.FC = () => {
         setIsListening(true);
       };
 
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       rec.onresult = (event: any) => {
         const text = event.results[0][0].transcript;
         if (text && text.trim()) {
           setInputText(text);
-          sendMessage(text);
+          sendMessageRef.current(text);
         }
       };
 
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       rec.onerror = (err: any) => {
         console.error('Speech recognition error:', err);
         setIsListening(false);
@@ -80,7 +89,9 @@ export const ChatRoom: React.FC = () => {
         setIsListening(false);
       };
 
-      setRecognition(rec);
+      setTimeout(() => {
+        setRecognition(rec);
+      }, 0);
     }
   }, []);
 
@@ -124,7 +135,7 @@ export const ChatRoom: React.FC = () => {
     }
     window.speechSynthesis.cancel();
 
-    const cleanText = text.replace(/[*_`#\-]/g, ' ').trim();
+    const cleanText = text.replace(/[*_`#-]/g, ' ').trim();
 
     // Try playing custom cloned voice from backend endpoint
     const audioUrl = `/api/speech?text=${encodeURIComponent(cleanText)}`;
@@ -207,7 +218,7 @@ export const ChatRoom: React.FC = () => {
 
     // Create recruiter message
     const userMsg: Message = {
-      id: Math.random().toString(),
+      id: generateMessageId(),
       sender: 'recruiter',
       text: textToSend,
       timestamp: new Date(),
@@ -221,7 +232,7 @@ export const ChatRoom: React.FC = () => {
       const responseText = await chatWithAvatar(textToSend);
       
       const avatarMsg: Message = {
-        id: Math.random().toString(),
+        id: generateMessageId(),
         sender: 'avatar',
         text: responseText,
         timestamp: new Date(),
@@ -237,7 +248,7 @@ export const ChatRoom: React.FC = () => {
     } catch (error) {
       console.error('Error getting chat response:', error);
       const errorMsg: Message = {
-        id: Math.random().toString(),
+        id: generateMessageId(),
         sender: 'avatar',
         text: "I'm having trouble connecting to my service database. Let's try again in a moment, or you can contact Vidya directly below!",
         timestamp: new Date(),
@@ -247,7 +258,9 @@ export const ChatRoom: React.FC = () => {
     }
   };
 
-  sendMessageRef.current = sendMessage;
+  useEffect(() => {
+    sendMessageRef.current = sendMessage;
+  });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();

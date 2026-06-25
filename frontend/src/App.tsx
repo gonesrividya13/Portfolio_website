@@ -30,9 +30,10 @@ function App() {
       try {
         const data = await getProjects();
         setProjects(data);
-      } catch (err: any) {
+      } catch (err) {
         console.error('Error fetching projects:', err);
-        setErrors((prev) => ({ ...prev, projects: err.message || 'Error fetching projects' }));
+        const errMsg = err instanceof Error ? err.message : 'Error fetching projects';
+        setErrors((prev) => ({ ...prev, projects: errMsg }));
       } finally {
         setLoading((prev) => ({ ...prev, projects: false }));
       }
@@ -41,9 +42,10 @@ function App() {
       try {
         const data = await getSkills();
         setSkills(data);
-      } catch (err: any) {
+      } catch (err) {
         console.error('Error fetching skills:', err);
-        setErrors((prev) => ({ ...prev, skills: err.message || 'Error fetching skills' }));
+        const errMsg = err instanceof Error ? err.message : 'Error fetching skills';
+        setErrors((prev) => ({ ...prev, skills: errMsg }));
       } finally {
         setLoading((prev) => ({ ...prev, skills: false }));
       }
@@ -52,9 +54,10 @@ function App() {
       try {
         const data = await getExperiences();
         setExperiences(data);
-      } catch (err: any) {
+      } catch (err) {
         console.error('Error fetching experiences:', err);
-        setErrors((prev) => ({ ...prev, experiences: err.message || 'Error fetching experiences' }));
+        const errMsg = err instanceof Error ? err.message : 'Error fetching experiences';
+        setErrors((prev) => ({ ...prev, experiences: errMsg }));
       } finally {
         setLoading((prev) => ({ ...prev, experiences: false }));
       }
