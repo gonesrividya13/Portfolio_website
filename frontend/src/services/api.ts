@@ -2,7 +2,7 @@ import axios from 'axios';
 import type { Project, Skill, Experience, ContactMessage } from '../types';
 
 const api = axios.create({
-  baseURL: '', // Let Vite proxy handle prefix routing
+  baseURL: import.meta.env.VITE_API_URL || '', 
 });
 
 export const getProjects = async (): Promise<Project[]> => {
