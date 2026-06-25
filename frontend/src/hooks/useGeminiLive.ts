@@ -111,6 +111,14 @@ export const useGeminiLive = () => {
           throw new Error("Microphone API not supported. Must use HTTPS or localhost.");
       }
 
+      // Fetch credentials from our backend
+      const res = await fetch('/api/gemini/credentials');
+      if (!res.ok) {
+        throw new Error("Failed to fetch Gemini credentials from backend.");
+      }
+      const creds = await res.json();
+      if (creds.error) throw new Error(creds.error);
+
       // 1. Initialize AudioContext (must be 16kHz for mic input)
       const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext;
       const ctx = new AudioContextClass({ sampleRate: 16000 });
@@ -134,12 +142,45 @@ export const useGeminiLive = () => {
       source.connect(workletNode);
       workletNode.connect(ctx.destination);
 
-      // 4. Connect WebSocket to Spring Boot proxy
-      const wsUrl = import.meta.env.VITE_WS_URL || `ws://${window.location.host}/api/live-chat`;
+      // 4. Connect directly to Gemini WebSocket
+      const wsUrl = `wss://generativelanguage.googleapis.com/ws/google.ai.generativelanguage.v1beta.GenerativeService.BidiGenerateContent?key=${creds.apiKey}`;
       const ws = new WebSocket(wsUrl);
       wsRef.current = ws;
 
       ws.onopen = () => {
+        // Send setup message directly
+        const setupMessage = {
+          setup: {
+            model: creds.model,
+            generationConfig: {
+              responseModalities: ["AUDIO"],
+              speechConfig: {
+                voiceConfig: {
+                  prebuiltVoiceConfig: { voiceName: "Aoede" }
+                }
+              }
+            },
+            systemInstruction: {
+              parts: [{ text: creds.systemInstruction }]
+            }
+          }
+        };
+        ws.send(JSON.stringify(setupMessage));
+        console.log("Sent setup message directly to Gemini");
+        
+        // Force an initial greeting so the user knows it's working immediately
+        const initialMessage = {
+          clientContent: {
+            turns: [{
+              role: "user",
+              parts: [{ text: "Hello! Please briefly introduce yourself in one sentence so I know your audio is working." }]
+            }],
+            turnComplete: true
+          }
+        };
+        ws.send(JSON.stringify(initialMessage));
+        console.log("Sent initial text prompt to force greeting");
+
         setIsConnected(true);
         // Start sending mic data
         workletNode.port.onmessage = (event) => {
@@ -164,7 +205,7 @@ export const useGeminiLive = () => {
       ws.onclose = (e) => {
         setIsConnected(false);
         if (e.code !== 1000) {
-            setError(`WebSocket Closed: ${e.reason || 'Server dropped connection (Ensure GEMINI_API_KEY is set in backend)'}`);
+            setError(`WebSocket Closed: ${e.reason || 'Server dropped connection'}`);
         }
         disconnect();
       };
