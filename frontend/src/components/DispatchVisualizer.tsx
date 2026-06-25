@@ -12,50 +12,50 @@ import {
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Activity, Database, Server, User } from 'lucide-react';
+import { Activity, Database, Server, User, Zap } from 'lucide-react';
 
 const initialNodes = [
   {
     id: 'user',
     type: 'custom',
     position: { x: 50, y: 150 },
-    data: { label: 'User Actions', icon: <User className="w-6 h-6" />, color: 'bg-blue-500' },
+    data: { label: 'User Actions', icon: <User className="w-6 h-6" />, color: 'bg-cyan-500/20 text-cyan-400 border-cyan-500/50 shadow-[0_0_15px_rgba(6,182,212,0.3)]', glow: 'cyan' },
   },
   {
     id: 'kafka',
     type: 'custom',
     position: { x: 300, y: 150 },
-    data: { label: 'Kafka Topic', icon: <Activity className="w-6 h-6" />, color: 'bg-green-500' },
+    data: { label: 'Kafka Topic', icon: <Activity className="w-6 h-6" />, color: 'bg-indigo-500/20 text-indigo-400 border-indigo-500/50 shadow-[0_0_15px_rgba(99,102,241,0.3)]', glow: 'indigo' },
   },
   {
     id: 'consumer',
     type: 'custom',
     position: { x: 550, y: 150 },
-    data: { label: 'Spring Boot Consumer', icon: <Server className="w-6 h-6" />, color: 'bg-purple-500' },
+    data: { label: 'Event Consumer', icon: <Server className="w-6 h-6" />, color: 'bg-fuchsia-500/20 text-fuchsia-400 border-fuchsia-500/50 shadow-[0_0_15px_rgba(217,70,239,0.3)]', glow: 'fuchsia' },
   },
   {
     id: 'db',
     type: 'custom',
     position: { x: 800, y: 150 },
-    data: { label: 'PostgreSQL', icon: <Database className="w-6 h-6" />, color: 'bg-indigo-500' },
+    data: { label: 'PostgreSQL', icon: <Database className="w-6 h-6" />, color: 'bg-emerald-500/20 text-emerald-400 border-emerald-500/50 shadow-[0_0_15px_rgba(16,185,129,0.3)]', glow: 'emerald' },
   },
 ];
 
 const initialEdges = [
-  { id: 'e1-2', source: 'user', target: 'kafka', animated: true, style: { stroke: '#10b981', strokeWidth: 2 } },
-  { id: 'e2-3', source: 'kafka', target: 'consumer', animated: true, style: { stroke: '#8b5cf6', strokeWidth: 2 } },
-  { id: 'e3-4', source: 'consumer', target: 'db', animated: true, style: { stroke: '#6366f1', strokeWidth: 2 } },
+  { id: 'e1-2', source: 'user', target: 'kafka', animated: true, style: { stroke: 'rgba(6,182,212,0.6)', strokeWidth: 3 } },
+  { id: 'e2-3', source: 'kafka', target: 'consumer', animated: true, style: { stroke: 'rgba(99,102,241,0.6)', strokeWidth: 3 } },
+  { id: 'e3-4', source: 'consumer', target: 'db', animated: true, style: { stroke: 'rgba(217,70,239,0.6)', strokeWidth: 3 } },
 ];
 
 const CustomNode = ({ data }: any) => {
   return (
-    <div className={`px-4 py-3 shadow-lg rounded-md bg-gray-800 border-2 border-gray-700 flex items-center space-x-3`}>
-      <Handle type="target" position={Position.Left} className="w-2 h-2 !bg-gray-500" />
-      <div className={`p-2 rounded-full text-white ${data.color}`}>
+    <div className={`px-5 py-3 rounded-full bg-slate-900/80 backdrop-blur-md border-2 flex items-center space-x-3 transition-transform hover:scale-105 cursor-pointer ${data.color}`}>
+      <Handle type="target" position={Position.Left} className="w-3 h-3 !bg-slate-800 !border-slate-500" />
+      <div className={`p-2 rounded-full bg-slate-950/50 shadow-inner`}>
         {data.icon}
       </div>
-      <div className="text-white font-medium">{data.label}</div>
-      <Handle type="source" position={Position.Right} className="w-2 h-2 !bg-gray-500" />
+      <div className="font-bold tracking-wide">{data.label}</div>
+      <Handle type="source" position={Position.Right} className="w-3 h-3 !bg-slate-800 !border-slate-500" />
     </div>
   );
 };
@@ -73,7 +73,6 @@ export const DispatchVisualizer = () => {
     const id = `packet-${packetIdCounter.current++}`;
     setActivePackets(prev => [...prev, { id, stage: 0 }]);
     
-    // Simulate progression
     setTimeout(() => {
       setActivePackets(prev => prev.map(p => p.id === id ? { ...p, stage: 1 } : p));
     }, 600);
@@ -89,11 +88,10 @@ export const DispatchVisualizer = () => {
   }, []);
 
   useEffect(() => {
-    // Attach listener to window scroll to generate events (debounced somewhat implicitly by requestAnimationFrame in real scenario, here we just throttle)
     let lastEventTime = 0;
     const handleScroll = () => {
       const now = Date.now();
-      if (now - lastEventTime > 800) { // Throttle to prevent spam
+      if (now - lastEventTime > 600) { 
         triggerEvent();
         lastEventTime = now;
       }
@@ -104,57 +102,86 @@ export const DispatchVisualizer = () => {
   }, [triggerEvent]);
 
   return (
-    <div className="w-full max-w-5xl mx-auto my-12 p-6 bg-gray-900 rounded-xl shadow-2xl border border-gray-800">
-      <div className="flex justify-between items-center mb-6 border-b border-gray-800 pb-4">
-        <div>
-          <h2 className="text-3xl font-bold text-white mb-2">Real-Time Event Dispatcher</h2>
-          <p className="text-gray-400">Scroll the page to simulate user events flowing through a Kafka pipeline.</p>
+    <motion.div 
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.6, delay: 0.2 }}
+      className="w-full max-w-5xl mx-auto my-16 relative group"
+    >
+      <div className="absolute -inset-1 bg-gradient-to-r from-cyan-500 via-indigo-500 to-emerald-500 rounded-2xl blur opacity-20 group-hover:opacity-30 transition duration-1000 group-hover:duration-200"></div>
+
+      <div className="relative p-8 bg-slate-900/60 backdrop-blur-xl rounded-2xl shadow-2xl border border-white/10 overflow-hidden">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 border-b border-white/10 pb-6 relative z-10">
+          <div className="flex items-start space-x-4">
+            <div className="p-3 bg-cyan-500/10 rounded-xl border border-cyan-500/20">
+              <Zap className="w-8 h-8 text-cyan-400" />
+            </div>
+            <div>
+              <h2 className="text-3xl font-extrabold bg-gradient-to-r from-cyan-400 via-indigo-400 to-fuchsia-400 text-transparent bg-clip-text tracking-tight mb-2">
+                Real-Time Event Dispatcher
+              </h2>
+              <p className="text-slate-400 font-medium">Scroll the page to simulate user events flowing through a high-volume Kafka pipeline.</p>
+            </div>
+          </div>
+
+          <div className="mt-6 md:mt-0 bg-slate-950/60 p-5 rounded-2xl border border-white/5 shadow-inner text-center min-w-[180px] relative overflow-hidden">
+            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-cyan-500 to-indigo-500"></div>
+            <p className="text-xs text-slate-500 font-bold uppercase tracking-widest mb-2">Events Processed</p>
+            <p className="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-br from-white to-slate-400 tracking-tighter tabular-nums font-mono">
+              {eventsProcessed.toLocaleString().padStart(5, '0')}
+            </p>
+          </div>
         </div>
-        <div className="bg-gray-800 p-4 rounded-lg border border-gray-700 text-center min-w-[150px]">
-          <p className="text-xs text-gray-400 uppercase tracking-wider mb-1">Events Processed</p>
-          <p className="text-3xl font-bold text-indigo-400">
-            {eventsProcessed.toLocaleString()}
-          </p>
+
+        <div className="h-[400px] w-full bg-[#0a0a0f] rounded-xl border border-white/10 relative overflow-hidden shadow-inner">
+          {/* Subtle grid background */}
+          <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:20px_20px]"></div>
+
+          <ReactFlow
+            nodes={nodes}
+            edges={edges}
+            onNodesChange={onNodesChange}
+            onEdgesChange={onEdgesChange}
+            nodeTypes={nodeTypes}
+            fitView
+            className="z-10"
+          >
+            <Background color="transparent" />
+          </ReactFlow>
+
+          {/* Comet Trails Overlay */}
+          <div className="absolute top-0 left-0 w-full h-full pointer-events-none z-20">
+            <AnimatePresence>
+              {activePackets.map(packet => {
+                let x = 0;
+                let colors = "";
+                if (packet.stage === 0) {
+                  x = 120 + (Math.random() * 80);
+                  colors = "from-cyan-400 to-transparent";
+                } else if (packet.stage === 1) {
+                  x = 380 + (Math.random() * 80);
+                  colors = "from-indigo-400 to-transparent";
+                } else if (packet.stage === 2) {
+                  x = 620 + (Math.random() * 80);
+                  colors = "from-fuchsia-400 to-transparent";
+                }
+
+                return (
+                  <motion.div
+                    key={packet.id}
+                    initial={{ opacity: 0, x: x - 50, y: 200, scaleX: 0 }}
+                    animate={{ opacity: 1, x: x, y: 200, scaleX: 1 }}
+                    exit={{ opacity: 0, x: x + 50, scaleX: 0 }}
+                    transition={{ duration: 0.5, ease: "easeInOut" }}
+                    className={`absolute w-16 h-1 rounded-full bg-gradient-to-r ${colors} shadow-[0_0_15px_rgba(255,255,255,0.8)] blur-[1px]`}
+                  />
+                );
+              })}
+            </AnimatePresence>
+          </div>
         </div>
       </div>
-
-      <div className="h-[400px] w-full bg-gray-950 rounded-lg border border-gray-800 relative overflow-hidden">
-        <ReactFlow
-          nodes={nodes}
-          edges={edges}
-          onNodesChange={onNodesChange}
-          onEdgesChange={onEdgesChange}
-          nodeTypes={nodeTypes}
-          fitView
-          className="bg-gray-950"
-        >
-          <Background color="#333" gap={16} />
-        </ReactFlow>
-
-        {/* Overlay animated packets */}
-        <div className="absolute top-0 left-0 w-full h-full pointer-events-none z-10">
-          <AnimatePresence>
-            {activePackets.map(packet => {
-              // Calculate rough positions based on initialNodes setup
-              let x = 0;
-              if (packet.stage === 0) x = 120 + (Math.random() * 100);
-              else if (packet.stage === 1) x = 380 + (Math.random() * 100);
-              else if (packet.stage === 2) x = 620 + (Math.random() * 100);
-
-              return (
-                <motion.div
-                  key={packet.id}
-                  initial={{ opacity: 0, x: 100, y: 200 }}
-                  animate={{ opacity: 1, x, y: 200 }}
-                  exit={{ opacity: 0, scale: 0 }}
-                  transition={{ duration: 0.5, ease: "linear" }}
-                  className="absolute w-3 h-3 bg-yellow-400 rounded-full shadow-[0_0_10px_rgba(250,204,21,0.8)]"
-                />
-              );
-            })}
-          </AnimatePresence>
-        </div>
-      </div>
-    </div>
+    </motion.div>
   );
 };
