@@ -14,8 +14,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.portfolio.backend.security.JwtAuthFilter;
+import com.portfolio.backend.security.SecurityConfig;
+import org.springframework.context.annotation.Import;
 
 @WebMvcTest(SpeechController.class)
+@Import(SecurityConfig.class)
 public class SpeechControllerTest {
 
     @Autowired

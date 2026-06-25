@@ -16,8 +16,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.portfolio.backend.security.JwtAuthFilter;
+import com.portfolio.backend.security.SecurityConfig;
+import org.springframework.context.annotation.Import;
 
 @WebMvcTest(ChatController.class)
+@Import(SecurityConfig.class)
 public class ChatControllerTest {
 
     @Autowired

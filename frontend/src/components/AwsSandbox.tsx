@@ -6,7 +6,7 @@ export const AwsSandbox = () => {
   const [requestText, setRequestText] = useState("");
   const [activeStep, setActiveStep] = useState(-1); // -1: idle, 0: client, 1: apigw, 2: lambda, 3: openai/s3, 4: done
   const [isSimulating, setIsSimulating] = useState(false);
-  const [response, setResponse] = useState<any>(null);
+  const [response, setResponse] = useState<unknown>(null);
 
   const startSimulation = (e: React.FormEvent) => {
     e.preventDefault();

@@ -37,7 +37,7 @@ export const useGeminiLive = () => {
   const float32ToPcm16Base64 = (float32Array: Float32Array) => {
     const int16Array = new Int16Array(float32Array.length);
     for (let i = 0; i < float32Array.length; i++) {
-      let s = Math.max(-1, Math.min(1, float32Array[i]));
+      const s = Math.max(-1, Math.min(1, float32Array[i]));
       int16Array[i] = s < 0 ? s * 0x8000 : s * 0x7FFF;
     }
     const uint8Array = new Uint8Array(int16Array.buffer);
@@ -76,35 +76,27 @@ export const useGeminiLive = () => {
     };
   };
 
-  const handleWebSocketMessage = async (event: MessageEvent) => {
-    try {
-      let messageText = event.data;
-      if (event.data instanceof Blob) {
-        messageText = await event.data.text();
-      }
-      
-      const data = JSON.parse(messageText);
-      
-      if (data.serverContent && data.serverContent.modelTurn) {
-        const parts = data.serverContent.modelTurn.parts;
-        for (const part of parts) {
-          if (part.inlineData && part.inlineData.mimeType.startsWith('audio/pcm')) {
-            console.log("Received audio chunk from Gemini, playing...");
-            playAudioChunk(part.inlineData.data);
-          }
-        }
-      } else if (data.serverContent?.interrupted) {
-         console.log("Gemini interrupted");
-      } else if (data.serverContent) {
-         console.log("Received other serverContent:", data.serverContent);
-      } else if (data.error) {
-         setError("Gemini API Error: " + JSON.stringify(data.error));
-         disconnect();
-      }
-    } catch (err) {
-      console.error("Failed to parse WS message", err);
+  const disconnect = useCallback(() => {
+    if (workletNodeRef.current) {
+      workletNodeRef.current.disconnect();
+      workletNodeRef.current = null;
     }
-  };
+    if (mediaStreamRef.current) {
+      mediaStreamRef.current.getTracks().forEach(t => t.stop());
+      mediaStreamRef.current = null;
+    }
+    if (audioContextRef.current) {
+      audioContextRef.current.close();
+      audioContextRef.current = null;
+    }
+    if (wsRef.current) {
+      wsRef.current.close();
+      wsRef.current = null;
+    }
+    setIsConnected(false);
+    setIsSpeaking(false);
+  }, []);
+
 
   const connect = useCallback(async () => {
     try {
@@ -114,6 +106,7 @@ export const useGeminiLive = () => {
       }
 
       // 1. Initialize AudioContext (must be 16kHz for mic input)
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext;
       const ctx = new AudioContextClass({ sampleRate: 16000 });
       await ctx.resume();
@@ -199,6 +192,36 @@ export const useGeminiLive = () => {
         };
       };
 
+      const handleWebSocketMessage = async (event: MessageEvent) => {
+        try {
+          let messageText = event.data;
+          if (event.data instanceof Blob) {
+            messageText = await event.data.text();
+          }
+          
+          const data = JSON.parse(messageText);
+          
+          if (data.serverContent && data.serverContent.modelTurn) {
+            const parts = data.serverContent.modelTurn.parts;
+            for (const part of parts) {
+              if (part.inlineData && part.inlineData.mimeType.startsWith('audio/pcm')) {
+                console.log("Received audio chunk from Gemini, playing...");
+                playAudioChunk(part.inlineData.data);
+              }
+            }
+          } else if (data.serverContent?.interrupted) {
+             console.log("Gemini interrupted");
+          } else if (data.serverContent) {
+             console.log("Received other serverContent:", data.serverContent);
+          } else if (data.error) {
+             setError("Gemini API Error: " + JSON.stringify(data.error));
+             disconnect();
+          }
+        } catch (err) {
+          console.error("Failed to parse WS message", err);
+        }
+      };
+
       ws.onmessage = handleWebSocketMessage;
 
       ws.onclose = (e) => {
@@ -213,33 +236,15 @@ export const useGeminiLive = () => {
         setError("WebSocket Connection Error.");
       };
 
-    } catch (err: any) {
-      console.error("Error connecting to Gemini Live:", err);
-      setError(err.message || "Failed to connect.");
+    } catch (err: unknown) {
+      const errorObj = err as Error;
+      console.error("Error connecting to Gemini Live:", errorObj);
+      setError(errorObj.message || "Failed to connect.");
       disconnect();
     }
-  }, []);
+  }, [disconnect]);
 
-  const disconnect = useCallback(() => {
-    if (workletNodeRef.current) {
-      workletNodeRef.current.disconnect();
-      workletNodeRef.current = null;
-    }
-    if (mediaStreamRef.current) {
-      mediaStreamRef.current.getTracks().forEach(t => t.stop());
-      mediaStreamRef.current = null;
-    }
-    if (audioContextRef.current) {
-      audioContextRef.current.close();
-      audioContextRef.current = null;
-    }
-    if (wsRef.current) {
-      wsRef.current.close();
-      wsRef.current = null;
-    }
-    setIsConnected(false);
-    setIsSpeaking(false);
-  }, []);
+
 
   useEffect(() => {
     return () => {

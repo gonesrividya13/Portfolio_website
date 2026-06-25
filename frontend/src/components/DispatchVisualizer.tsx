@@ -1,12 +1,9 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import {
   ReactFlow,
-  MiniMap,
-  Controls,
   Background,
   useNodesState,
   useEdgesState,
-  MarkerType,
   Handle,
   Position
 } from '@xyflow/react';
@@ -47,7 +44,7 @@ const initialEdges = [
   { id: 'e3-4', source: 'consumer', target: 'db', animated: true, style: { stroke: 'rgba(217,70,239,0.6)', strokeWidth: 3 } },
 ];
 
-const CustomNode = ({ data }: any) => {
+const CustomNode = ({ data }: { data: { label: string, icon: React.ReactNode, color: string } }) => {
   return (
     <div className={`px-5 py-3 rounded-full bg-slate-900/80 backdrop-blur-md border-2 flex items-center space-x-3 transition-transform hover:scale-105 cursor-pointer ${data.color}`}>
       <Handle type="target" position={Position.Left} className="w-3 h-3 !bg-slate-800 !border-slate-500" />
@@ -63,15 +60,16 @@ const CustomNode = ({ data }: any) => {
 const nodeTypes = { custom: CustomNode };
 
 export const DispatchVisualizer = () => {
-  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
-  const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
+  const [nodes, , onNodesChange] = useNodesState(initialNodes);
+  const [edges, , onEdgesChange] = useEdgesState(initialEdges);
   const [eventsProcessed, setEventsProcessed] = useState(0);
-  const [activePackets, setActivePackets] = useState<{ id: string, stage: number }[]>([]);
+  const [activePackets, setActivePackets] = useState<{ id: string, stage: number, xOffsets: number[] }[]>([]);
   const packetIdCounter = useRef(0);
 
   const triggerEvent = useCallback(() => {
     const id = `packet-${packetIdCounter.current++}`;
-    setActivePackets(prev => [...prev, { id, stage: 0 }]);
+    const xOffsets = [Math.random() * 80, Math.random() * 80, Math.random() * 80];
+    setActivePackets(prev => [...prev, { id, stage: 0, xOffsets }]);
     
     setTimeout(() => {
       setActivePackets(prev => prev.map(p => p.id === id ? { ...p, stage: 1 } : p));
@@ -157,13 +155,13 @@ export const DispatchVisualizer = () => {
                 let x = 0;
                 let colors = "";
                 if (packet.stage === 0) {
-                  x = 120 + (Math.random() * 80);
+                  x = 120 + packet.xOffsets[0];
                   colors = "from-cyan-400 to-transparent";
                 } else if (packet.stage === 1) {
-                  x = 380 + (Math.random() * 80);
+                  x = 380 + packet.xOffsets[1];
                   colors = "from-indigo-400 to-transparent";
                 } else if (packet.stage === 2) {
-                  x = 620 + (Math.random() * 80);
+                  x = 620 + packet.xOffsets[2];
                   colors = "from-fuchsia-400 to-transparent";
                 }
 

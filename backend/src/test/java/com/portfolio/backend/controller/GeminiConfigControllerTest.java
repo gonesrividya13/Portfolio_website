@@ -2,6 +2,8 @@ package com.portfolio.backend.controller;
 
 import com.portfolio.backend.service.GeminiService;
 import com.portfolio.backend.security.JwtAuthFilter;
+import com.portfolio.backend.security.SecurityConfig;
+import org.springframework.context.annotation.Import;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -16,6 +18,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(GeminiConfigController.class)
+@Import(SecurityConfig.class)
 @TestPropertySource(properties = {"gemini.api.key=TEST_API_KEY"})
 public class GeminiConfigControllerTest {
 
