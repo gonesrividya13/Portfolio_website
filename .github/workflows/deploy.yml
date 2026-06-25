@@ -35,12 +35,14 @@ jobs:
           cd frontend
           npm run build
 
-      - name: Deploy to Hostinger via FTP/SFTP
+      - name: Deploy to Hostinger via SFTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
           server: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
+          port: 65002
+          protocol: sftp
           local-dir: frontend/dist/
           server-dir: ./
 
