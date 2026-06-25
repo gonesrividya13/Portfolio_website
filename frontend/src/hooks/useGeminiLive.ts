@@ -75,9 +75,11 @@ export const useGeminiLive = () => {
     };
   };
 
-  const handleWebSocketMessage = (event: MessageEvent) => {
+  const handleWebSocketMessage = async (event: MessageEvent) => {
     try {
-      const data = JSON.parse(event.data);
+      const textData = event.data instanceof Blob ? await event.data.text() : event.data;
+      const data = JSON.parse(textData);
+      
       if (data.serverContent && data.serverContent.modelTurn) {
         const parts = data.serverContent.modelTurn.parts;
         for (const part of parts) {
@@ -118,8 +120,10 @@ export const useGeminiLive = () => {
       // 4. Fetch Ephemeral Token
       const { token, systemInstruction } = await getLiveChatToken();
 
-      // 5. Connect directly to Gemini
-      const wsUrl = `wss://generativelanguage.googleapis.com/ws/google.ai.generativelanguage.v1alpha.GenerativeService.BidiGenerateContent?key=${token}`;
+      // 5. Connect directly to Gemini using the constrained endpoint
+      // Note: For ephemeral tokens, we must use BidiGenerateContentConstrained
+      // and pass the token via the access_token query parameter.
+      const wsUrl = `wss://generativelanguage.googleapis.com/ws/google.ai.generativelanguage.v1alpha.GenerativeService.BidiGenerateContentConstrained?access_token=${token}`;
       const ws = new WebSocket(wsUrl);
       wsRef.current = ws;
 

@@ -157,11 +157,14 @@ public class GeminiService {
         }
 
         try {
-            String apiUrl = "https://generativelanguage.googleapis.com/v1alpha/models/gemini-2.5-flash-native-audio-latest:generateEphemeralToken?key=" + activeKey;
+            String apiUrl = "https://generativelanguage.googleapis.com/v1alpha/auth_tokens?key=" + activeKey;
             
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
-            HttpEntity<String> entity = new HttpEntity<>("{}", headers);
+            // The API expects an 'auth_token' object. Let's try sending an empty object first to see if it generates an unrestricted token.
+            String payload = "{}";
+                      
+            HttpEntity<String> entity = new HttpEntity<>(payload, headers);
 
             ResponseEntity<String> response = restTemplate.postForEntity(apiUrl, entity, String.class);
 
@@ -169,16 +172,31 @@ public class GeminiService {
                 String body = response.getBody();
                 System.out.println("Ephemeral Token API Response: " + body);
                 JsonNode json = objectMapper.readTree(body);
-                String generatedToken = json.path("token").asText();
+                
+                String generatedToken = "";
+                if (json.has("token")) {
+                    generatedToken = json.path("token").asText();
+                } else if (json.has("name")) {
+                    generatedToken = json.path("name").asText();
+                } else if (json.has("ephemeralToken")) {
+                    generatedToken = json.path("ephemeralToken").asText();
+                }
+                
                 System.out.println("Main API Key starts with: " + activeKey.substring(0, Math.min(8, activeKey.length())));
                 System.out.println("Ephemeral Token starts with: " + generatedToken.substring(0, Math.min(8, generatedToken.length())));
-                return json;
-            }
-            throw new RuntimeException("Failed to generate ephemeral token. Status: " + response.getStatusCode());
-        } catch (Exception e) {
-            System.err.println("Error calling generateEphemeralToken: " + e.getMessage());
-            throw new RuntimeException("Failed to generate ephemeral token", e);
+                
+            // Return an object containing exactly the "token" field so the controller extracts it easily
+            return objectMapper.createObjectNode().put("token", generatedToken);
         }
+        throw new RuntimeException("Failed to generate ephemeral token. Status: " + response.getStatusCode());
+    } catch (org.springframework.web.client.HttpStatusCodeException e) {
+        System.err.println("Google API Error Status: " + e.getStatusCode());
+        System.err.println("Google API Error Body: " + e.getResponseBodyAsString());
+        throw new RuntimeException("Failed to generate ephemeral token", e);
+    } catch (Exception e) {
+        System.err.println("Error calling generateEphemeralToken: " + e.getMessage());
+        throw new RuntimeException("Failed to generate ephemeral token", e);
+    }
     }
 
     private String generateMockResponse(String userPrompt) {
