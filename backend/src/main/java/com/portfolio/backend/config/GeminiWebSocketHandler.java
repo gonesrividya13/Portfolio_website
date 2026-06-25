@@ -67,7 +67,7 @@ public class GeminiWebSocketHandler extends TextWebSocketHandler {
                     // Send Setup Message with "Aoede" voice
                     ObjectNode root = objectMapper.createObjectNode();
                     ObjectNode setup = root.putObject("setup");
-                    setup.put("model", "models/gemini-2.0-flash");
+                    setup.put("model", "models/gemini-2.5-flash-native-audio-latest");
 
                     ObjectNode generationConfig = setup.putObject("generationConfig");
                     ArrayNode responseModalities = generationConfig.putArray("responseModalities");
