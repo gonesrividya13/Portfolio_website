@@ -78,15 +78,28 @@ export const useGeminiLive = () => {
   const handleWebSocketMessage = async (event: MessageEvent) => {
     try {
       const textData = event.data instanceof Blob ? await event.data.text() : event.data;
-      const data = JSON.parse(textData);
+      let messageText = event.data;
+      if (event.data instanceof Blob) {
+        messageText = await event.data.text();
+      }
+      
+      const data = JSON.parse(messageText);
       
       if (data.serverContent && data.serverContent.modelTurn) {
         const parts = data.serverContent.modelTurn.parts;
         for (const part of parts) {
           if (part.inlineData && part.inlineData.mimeType.startsWith('audio/pcm')) {
+            console.log("Received audio chunk from Gemini, playing...");
             playAudioChunk(part.inlineData.data);
           }
         }
+      } else if (data.serverContent?.interrupted) {
+         console.log("Gemini interrupted");
+      } else if (data.serverContent) {
+         console.log("Received other serverContent:", data.serverContent);
+      } else if (data.error) {
+         setError("Gemini API Error: " + JSON.stringify(data.error));
+         disconnect();
       }
     } catch (err) {
       console.error("Failed to parse WS message", err);
@@ -95,9 +108,15 @@ export const useGeminiLive = () => {
 
   const connect = useCallback(async () => {
     try {
+      setError(null);
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+          throw new Error("Microphone API not supported. Must use HTTPS or localhost.");
+      }
+
       // 1. Initialize AudioContext (must be 16kHz for mic input)
       const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext;
       const ctx = new AudioContextClass({ sampleRate: 16000 });
+      await ctx.resume();
       audioContextRef.current = ctx;
       nextPlayTimeRef.current = ctx.currentTime;
 
@@ -149,6 +168,18 @@ export const useGeminiLive = () => {
             }
           }
         }));
+        
+        // Force an initial greeting so the user knows it's working immediately
+        const initialMessage = {
+          clientContent: {
+            turns: [{
+              role: "user",
+              parts: [{ text: "Hello! Please briefly introduce yourself in one sentence so I know your audio is working." }]
+            }],
+            turnComplete: true
+          }
+        };
+        ws.send(JSON.stringify(initialMessage));
 
         // Start sending mic data
         workletNode.port.onmessage = (event) => {
@@ -170,13 +201,21 @@ export const useGeminiLive = () => {
 
       ws.onmessage = handleWebSocketMessage;
 
-      ws.onclose = () => {
+      ws.onclose = (e) => {
         setIsConnected(false);
+        if (e.code !== 1000) {
+            setError(`WebSocket Closed: ${e.reason || 'Server dropped connection'}`);
+        }
         disconnect();
       };
+      
+      ws.onerror = () => {
+        setError("WebSocket Connection Error.");
+      };
 
-    } catch (err) {
+    } catch (err: any) {
       console.error("Error connecting to Gemini Live:", err);
+      setError(err.message || "Failed to connect.");
       disconnect();
     }
   }, []);
