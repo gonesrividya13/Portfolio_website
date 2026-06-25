@@ -44,7 +44,7 @@ jobs:
           port: 65002
           protocol: sftp
           local-dir: frontend/dist/
-          server-dir: ./
+          server-dir: public_html/
 
   deploy-backend:
     name: Build & Test Backend
