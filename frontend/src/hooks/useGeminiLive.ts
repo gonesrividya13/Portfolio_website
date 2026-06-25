@@ -4,6 +4,7 @@ import { getLiveChatToken } from '../services/api';
 export const useGeminiLive = () => {
   const [isConnected, setIsConnected] = useState(false);
   const [isSpeaking, setIsSpeaking] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   
   const wsRef = useRef<WebSocket | null>(null);
   const audioContextRef = useRef<AudioContext | null>(null);
@@ -247,5 +248,5 @@ export const useGeminiLive = () => {
     };
   }, [disconnect]);
 
-  return { connect, disconnect, isConnected, isSpeaking };
+  return { connect, disconnect, isConnected, isSpeaking, error };
 };
