@@ -3,6 +3,7 @@ import { useState, useRef, useCallback, useEffect } from 'react';
 export const useGeminiLive = () => {
   const [isConnected, setIsConnected] = useState(false);
   const [isSpeaking, setIsSpeaking] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   
   const wsRef = useRef<WebSocket | null>(null);
   const audioContextRef = useRef<AudioContext | null>(null);
@@ -84,6 +85,9 @@ export const useGeminiLive = () => {
             playAudioChunk(part.inlineData.data);
           }
         }
+      } else if (data.error) {
+         setError("Gemini API Error: " + JSON.stringify(data.error));
+         disconnect();
       }
     } catch (err) {
       console.error("Failed to parse WS message", err);
@@ -91,7 +95,12 @@ export const useGeminiLive = () => {
   };
 
   const connect = useCallback(async () => {
+    setError(null);
     try {
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+          throw new Error("Microphone API not supported. Must use HTTPS or localhost.");
+      }
+
       // 1. Initialize AudioContext (must be 16kHz for mic input)
       const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext;
       const ctx = new AudioContextClass({ sampleRate: 16000 });
@@ -141,13 +150,21 @@ export const useGeminiLive = () => {
 
       ws.onmessage = handleWebSocketMessage;
 
-      ws.onclose = () => {
+      ws.onclose = (e) => {
         setIsConnected(false);
+        if (e.code !== 1000) {
+            setError(`WebSocket Closed: ${e.reason || 'Server dropped connection (Ensure GEMINI_API_KEY is set in backend)'}`);
+        }
         disconnect();
       };
 
-    } catch (err) {
+      ws.onerror = (e) => {
+        setError("WebSocket Connection Error. Check if backend is running.");
+      };
+
+    } catch (err: any) {
       console.error("Error connecting to Gemini Live:", err);
+      setError(err.message || "Failed to initialize microphone or connection.");
       disconnect();
     }
   }, []);
@@ -179,5 +196,5 @@ export const useGeminiLive = () => {
     };
   }, [disconnect]);
 
-  return { connect, disconnect, isConnected, isSpeaking };
+  return { connect, disconnect, isConnected, isSpeaking, error };
 };

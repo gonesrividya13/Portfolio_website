@@ -4,7 +4,7 @@ import { Mic, MicOff, PhoneCall, PhoneOff, Radio } from 'lucide-react';
 import { useGeminiLive } from '../hooks/useGeminiLive';
 
 export const ChatRoom: React.FC = () => {
-  const { connect, disconnect, isConnected, isSpeaking } = useGeminiLive();
+  const { connect, disconnect, isConnected, isSpeaking, error } = useGeminiLive();
 
   return (
     <section id="ai-room" className="py-24 relative overflow-hidden bg-slate-900/40">
@@ -66,7 +66,7 @@ export const ChatRoom: React.FC = () => {
             </div>
           </div>
 
-          <div className="relative z-10 mb-12 h-8">
+          <div className="relative z-10 mb-12 h-8 flex flex-col items-center">
             {isConnected ? (
               <motion.span 
                 initial={{ opacity: 0, y: 10 }}
@@ -79,6 +79,15 @@ export const ChatRoom: React.FC = () => {
               <span className="text-lg font-medium text-slate-500">
                 Ready to start the interview?
               </span>
+            )}
+            {error && (
+              <motion.div 
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="mt-4 px-4 py-2 bg-rose-500/10 border border-rose-500/30 rounded-lg text-rose-400 text-sm max-w-md text-center"
+              >
+                {error}
+              </motion.div>
             )}
           </div>
 
