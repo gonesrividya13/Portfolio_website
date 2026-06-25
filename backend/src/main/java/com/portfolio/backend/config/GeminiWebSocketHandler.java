@@ -70,7 +70,7 @@ public class GeminiWebSocketHandler extends TextWebSocketHandler {
                     setup.put("model", "models/gemini-2.0-flash-exp");
 
                     ObjectNode generationConfig = setup.putObject("generationConfig");
-                    ObjectNode responseModalities = generationConfig.putArray("responseModalities");
+                    ArrayNode responseModalities = generationConfig.putArray("responseModalities");
                     responseModalities.add("AUDIO");
                     
                     ObjectNode speechConfig = generationConfig.putObject("speechConfig");
