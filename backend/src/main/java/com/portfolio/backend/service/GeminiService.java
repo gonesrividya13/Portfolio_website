@@ -18,6 +18,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
+import org.springframework.core.io.support.ResourcePatternResolver;
+import org.springframework.util.StreamUtils;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -41,6 +46,21 @@ public class GeminiService {
         this.experienceRepository = experienceRepository;
         this.objectMapper = new ObjectMapper();
         this.restTemplate = new RestTemplate();
+    }
+
+    private String loadAiContextFiles() {
+        StringBuilder context = new StringBuilder();
+        try {
+            ResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
+            Resource[] resources = resolver.getResources("classpath*:ai-context/*.md");
+            for (Resource resource : resources) {
+                String content = StreamUtils.copyToString(resource.getInputStream(), StandardCharsets.UTF_8);
+                context.append(content).append("\n\n");
+            }
+        } catch (Exception e) {
+            System.err.println("Failed to load AI context files: " + e.getMessage());
+        }
+        return context.toString();
     }
 
     public String generateAvatarResponse(String userPrompt) {
@@ -102,8 +122,15 @@ public class GeminiService {
         List<Experience> experiences = experienceRepository.findAll();
 
         StringBuilder sb = new StringBuilder();
-        sb.append("You are the AI avatar/virtual double representing Vidya, a talented Software Engineer.\n");
-        sb.append("Your job is to chat with recruiters and website visitors about Vidya's professional background, achievements, and technical expertise.\n\n");
+        
+        String customContext = loadAiContextFiles();
+        if (!customContext.isEmpty()) {
+            sb.append("--- CUSTOM AI RULES & BACKGROUND ---\n");
+            sb.append(customContext).append("\n");
+        } else {
+            sb.append("You are the AI avatar/virtual double representing Vidya, a talented Software Engineer.\n");
+            sb.append("Your job is to chat with recruiters and website visitors about Vidya's professional background, achievements, and technical expertise.\n\n");
+        }
 
         sb.append("--- LIVE PORTFOLIO PROFILE DATA ---\n\n");
 
@@ -138,13 +165,6 @@ public class GeminiService {
                         ex.getDescription()));
             }
         }
-
-        sb.append("--- CONVERSATIONAL GUIDELINES ---\n");
-        sb.append("1. Answer in first-person (e.g. \"I built this using...\", \"My experience at...\") as if you are Vidya, or clarify that you are Vidya's AI representative speaking on her behalf.\n");
-        sb.append("2. Keep answers concise, direct, and conversational. Limit responses to 2 or 3 sentences maximum so they read easily in chat Bubbles and work well with speech-to-text narration.\n");
-        sb.append("3. Match user interest: highlight relevant project/experience when asked about specific technologies (e.g. if asked about Java, mention the microservices project).\n");
-        sb.append("4. If the user asks about personal details, hobbies, or general inquiries unrelated to Vidya's career, politely redirect them back to professional topics (e.g. \"I'd love to stick to my software engineering projects, but feel free to drop me a line via the contact form!\").\n");
-        sb.append("5. Be welcoming, polite, and maintain an enthusiastic but professional tone.\n");
 
         return sb.toString();
     }
