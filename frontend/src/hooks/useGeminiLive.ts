@@ -82,9 +82,14 @@ export const useGeminiLive = () => {
         const parts = data.serverContent.modelTurn.parts;
         for (const part of parts) {
           if (part.inlineData && part.inlineData.mimeType.startsWith('audio/pcm')) {
+            console.log("Received audio chunk from Gemini, playing...");
             playAudioChunk(part.inlineData.data);
           }
         }
+      } else if (data.serverContent?.interrupted) {
+         console.log("Gemini interrupted");
+      } else if (data.serverContent) {
+         console.log("Received other serverContent:", data.serverContent);
       } else if (data.error) {
          setError("Gemini API Error: " + JSON.stringify(data.error));
          disconnect();
@@ -112,6 +117,7 @@ export const useGeminiLive = () => {
       // 1. Initialize AudioContext (must be 16kHz for mic input)
       const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext;
       const ctx = new AudioContextClass({ sampleRate: 16000 });
+      await ctx.resume();
       audioContextRef.current = ctx;
       nextPlayTimeRef.current = ctx.currentTime;
 
@@ -155,7 +161,21 @@ export const useGeminiLive = () => {
           }
         };
         ws.send(JSON.stringify(setupMessage));
+        console.log("Sent setup message directly to Gemini");
         
+        // Force an initial greeting so the user knows it's working immediately
+        const initialMessage = {
+          clientContent: {
+            turns: [{
+              role: "user",
+              parts: [{ text: "Hello! Please briefly introduce yourself in one sentence so I know your audio is working." }]
+            }],
+            turnComplete: true
+          }
+        };
+        ws.send(JSON.stringify(initialMessage));
+        console.log("Sent initial text prompt to force greeting");
+
         setIsConnected(true);
         // Start sending mic data
         workletNode.port.onmessage = (event) => {
