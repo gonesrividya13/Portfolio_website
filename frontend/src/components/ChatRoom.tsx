@@ -138,7 +138,8 @@ export const ChatRoom: React.FC = () => {
     const cleanText = text.replace(/[*_`#-]/g, ' ').trim();
 
     // Try playing custom cloned voice from backend endpoint
-    const audioUrl = `/api/speech?text=${encodeURIComponent(cleanText)}`;
+    const baseUrl = import.meta.env.VITE_API_URL || '';
+    const audioUrl = `${baseUrl}/api/speech?text=${encodeURIComponent(cleanText)}`;
     const audio = new Audio(audioUrl);
     audioRef.current = audio;
 
