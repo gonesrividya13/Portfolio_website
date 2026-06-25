@@ -78,7 +78,6 @@ export const useGeminiLive = () => {
 
   const handleWebSocketMessage = async (event: MessageEvent) => {
     try {
-      const textData = event.data instanceof Blob ? await event.data.text() : event.data;
       let messageText = event.data;
       if (event.data instanceof Blob) {
         messageText = await event.data.text();

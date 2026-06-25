@@ -16,6 +16,8 @@ import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import com.portfolio.backend.security.JwtAuthFilter;
+
 @WebMvcTest(ProjectController.class)
 public class ProjectControllerTest {
 
@@ -24,6 +26,9 @@ public class ProjectControllerTest {
 
     @MockBean
     private ProjectService projectService;
+
+    @MockBean
+    private JwtAuthFilter jwtAuthFilter;
 
     @Autowired
     private ObjectMapper objectMapper;

@@ -13,6 +13,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.portfolio.backend.security.JwtAuthFilter;
+
 @WebMvcTest(SpeechController.class)
 public class SpeechControllerTest {
 
@@ -21,6 +23,9 @@ public class SpeechControllerTest {
 
     @MockBean
     private ElevenLabsService elevenLabsService;
+
+    @MockBean
+    private JwtAuthFilter jwtAuthFilter;
 
     @Test
     public void testGetSpeechAudio_ServiceNotConfigured() throws Exception {

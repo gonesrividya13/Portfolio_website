@@ -15,6 +15,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.portfolio.backend.security.JwtAuthFilter;
+
 @WebMvcTest(ChatController.class)
 public class ChatControllerTest {
 
@@ -23,6 +25,9 @@ public class ChatControllerTest {
 
     @MockBean
     private GeminiService geminiService;
+
+    @MockBean
+    private JwtAuthFilter jwtAuthFilter;
 
     @Autowired
     private ObjectMapper objectMapper;
