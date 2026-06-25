@@ -20,4 +20,12 @@ public class WebSocketConfig implements WebSocketConfigurer {
         registry.addHandler(geminiWebSocketHandler, "/api/live-chat")
                 .setAllowedOriginPatterns("*");
     }
+
+    @org.springframework.context.annotation.Bean
+    public org.springframework.web.socket.server.standard.ServletServerContainerFactoryBean createWebSocketContainer() {
+        org.springframework.web.socket.server.standard.ServletServerContainerFactoryBean container = new org.springframework.web.socket.server.standard.ServletServerContainerFactoryBean();
+        container.setMaxTextMessageBufferSize(1024 * 1024); // 1 MB
+        container.setMaxBinaryMessageBufferSize(1024 * 1024); // 1 MB
+        return container;
+    }
 }
