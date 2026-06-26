@@ -8,7 +8,7 @@ const AnimatedProp = ({ children, url }: { children: React.ReactNode, url: strin
   const groupRef = React.useRef<THREE.Group>(null);
   
   // Random offset so instances don't move in sync
-  const randomOffset = React.useMemo(() => Math.random() * Math.PI * 2, []);
+  const [randomOffset] = React.useState(() => Math.random() * Math.PI * 2);
   
   useFrame((state) => {
     if (!groupRef.current) return;
@@ -28,7 +28,7 @@ const AnimatedProp = ({ children, url }: { children: React.ReactNode, url: strin
   return <group ref={groupRef}>{children}</group>;
 };
 
-const LampBulb = ({ scene }: { scene: any }) => {
+const LampBulb = ({ scene }: { scene: THREE.Object3D }) => {
   const distance = useInfiniteScroll();
   
   // Calculate if it is night time
@@ -60,7 +60,7 @@ const LampBulb = ({ scene }: { scene: any }) => {
   );
 };
 
-export const KenneyProp = ({ url, position, quaternion, scale = 1, baseScale = 1 }: any) => {
+export const KenneyProp = ({ url, position, quaternion, scale = 1, baseScale = 1 }: { url: string, position: THREE.Vector3 | [number, number, number], quaternion: THREE.Quaternion | [number, number, number, number], scale?: number, baseScale?: number }) => {
   const { scene } = useGLTF(url);
   const isLamp = url.includes('light-curved');
   

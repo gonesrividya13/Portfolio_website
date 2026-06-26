@@ -1,6 +1,6 @@
 import React from 'react';
 import { Canvas } from '@react-three/fiber';
-import { useScroll } from 'framer-motion';
+
 import { CutePlanet } from './planet/CutePlanet';
 
 export const Scroll3DCanvas: React.FC = () => {

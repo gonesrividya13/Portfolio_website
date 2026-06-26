@@ -242,7 +242,7 @@ export const useGeminiLive = () => {
       setError(errorObj.message || "Failed to connect.");
       disconnect();
     }
-  }, [disconnect]);
+  }, [disconnect, playAudioChunk]);
 
 
 

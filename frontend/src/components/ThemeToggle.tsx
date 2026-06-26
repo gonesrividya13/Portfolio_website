@@ -2,16 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { Sun, Moon } from 'lucide-react';
 
 export const ThemeToggle = () => {
-  const [theme, setTheme] = useState<'light' | 'dark'>('dark');
-
-  useEffect(() => {
-    // Check initial theme from document class
-    if (document.documentElement.classList.contains('dark')) {
-      setTheme('dark');
-    } else {
-      setTheme('light');
-    }
-  }, []);
+  const [theme, setTheme] = useState<'light' | 'dark'>(() => 
+    document.documentElement.classList.contains('dark') ? 'dark' : 'light'
+  );
 
   const toggleTheme = () => {
     if (theme === 'dark') {

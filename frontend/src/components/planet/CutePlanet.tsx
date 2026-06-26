@@ -72,7 +72,6 @@ export const CutePlanet = () => {
       // Find the meshes inside skyRef and position them
       const sunMesh = skyRef.current.children[1];
       const moonMesh = skyRef.current.children[2];
-      const dirLight = skyRef.current.children[0] as THREE.DirectionalLight;
       
       if (sunMesh) sunMesh.position.set(sunX, sunY, bgZ);
       if (moonMesh) moonMesh.position.set(moonX, moonY, bgZ);
@@ -85,8 +84,8 @@ export const CutePlanet = () => {
     
     // The sun crosses the horizon (Y=0) when Math.cos(angle) = 0.5 because orbitCenterY is -15 and radius is 30.
     // So the sunset transition should happen between sunHeight 0.7 and 0.3
-    let ambientIntensity = 0;
-    let dirIntensity = 0;
+    let ambientIntensity: number;
+    let dirIntensity: number;
     let isNight = false;
 
     if (sunHeight > 0.7) {
@@ -99,7 +98,7 @@ export const CutePlanet = () => {
     } else if (sunHeight > 0.3) {
       // Sunset / Sunrise transition
       const t = (sunHeight - 0.3) / 0.4; // 0 at bottom (0.3), 1 at top (0.7)
-      currentColor.lerpColors(sunColorToUse(angle), dayColor, t);
+      currentColor.lerpColors(sunsetColor, dayColor, t);
       ambientIntensity = 0.8 + t * 1.2; // lerps from 0.8 to 2.0
       dirIntensity = t * 1.5; // Fades out completely before crossing the horizon!
       if (starsRef.current) starsRef.current.visible = true;
@@ -133,10 +132,6 @@ export const CutePlanet = () => {
     }
   });
 
-  // Helper to get sunrise vs sunset color
-  const sunColorToUse = (angle: number) => {
-    return new THREE.Color('#ff8855');
-  };
 
   return (
     <>

@@ -118,7 +118,7 @@ export const generatePlanetScenery = (radius: number, buildingElevation: number,
     const center = new THREE.Vector3(cx, cy, cz);
 
     // Determine biome based on distance from the road (phiOffset) and theta sector
-    let biome = 'nature';
+    let biome: string;
     const distFromRoad = Math.abs(phiOffset);
 
     if (distFromRoad > 0.4) {
@@ -173,7 +173,7 @@ export const generatePlanetScenery = (radius: number, buildingElevation: number,
       let matrix = new THREE.Matrix4().makeBasis(arbitraryRight, surfaceNormal, arbitraryNegForward);
       let q = new THREE.Quaternion().setFromRotationMatrix(matrix);
 
-      let url = '';
+      let url: string;
       let baseScale = 0.2;
       const rand = Math.random();
 

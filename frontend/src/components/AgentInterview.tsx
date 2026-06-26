@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Send, Bot, User, Sparkles, Loader2 } from 'lucide-react';
+import { Send, Bot, Sparkles, Loader2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export const AgentInterview: React.FC = () => {

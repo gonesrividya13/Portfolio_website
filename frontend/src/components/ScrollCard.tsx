@@ -18,8 +18,8 @@ export const ScrollCard: React.FC<ScrollCardProps> = ({ distance, centerDistance
   const isVisible = Math.abs(diff) < 1.5;
 
   // Calculate Y offset and opacity
-  let yOffset = 0; // in vh
-  let opacity = 0;
+  let yOffset: number; // in vh
+  let opacity: number;
   
   // The distance window where the card stays perfectly still in the center of the screen
   const pauseRange = 0.4;

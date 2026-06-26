@@ -1,13 +1,10 @@
 import { useState, useEffect } from 'react';
 import { motion, useMotionValue, useTransform } from 'framer-motion';
-import { Navbar } from './components/Navbar';
 import { Hero } from './components/Hero';
 import { AgentInterview } from './components/AgentInterview';
 import { About } from './components/About';
 import { ExperienceComponent } from './components/Experience';
 import { Projects } from './components/Projects';
-import { Contact } from './components/Contact';
-import { Footer } from './components/Footer';
 import { getProjects, getSkills, getExperiences } from './services/api';
 import type { Project, Skill, Experience } from './types';
 import { Scroll3DCanvas } from './components/Scroll3DCanvas';
