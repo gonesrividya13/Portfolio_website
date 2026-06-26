@@ -1,9 +1,12 @@
 import { useState, useRef, useCallback, useEffect } from 'react';
 import { getLiveChatToken } from '../services/api';
+import { PERSONA } from '../context/Persona';
 
 export const useGeminiLive = () => {
   const [isConnected, setIsConnected] = useState(false);
   const [isSpeaking, setIsSpeaking] = useState(false);
+  const [isUserSpeaking, setIsUserSpeaking] = useState(false);
+  const [hasSpokenOnce, setHasSpokenOnce] = useState(false);
   const [error, setError] = useState<string | null>(null);
   
   const wsRef = useRef<WebSocket | null>(null);
@@ -48,7 +51,7 @@ export const useGeminiLive = () => {
     return window.btoa(binary);
   };
 
-  const playAudioChunk = (base64Data: string) => {
+  const playAudioChunk = useCallback((base64Data: string) => {
     if (!audioContextRef.current) return;
     const ctx = audioContextRef.current;
     
@@ -74,7 +77,7 @@ export const useGeminiLive = () => {
         setIsSpeaking(false);
       }
     };
-  };
+  }, []);
 
   const disconnect = useCallback(() => {
     if (workletNodeRef.current) {
@@ -101,6 +104,7 @@ export const useGeminiLive = () => {
   const connect = useCallback(async () => {
     try {
       setError(null);
+      setHasSpokenOnce(false);
       if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
           throw new Error("Microphone API not supported. Must use HTTPS or localhost.");
       }
@@ -157,7 +161,7 @@ export const useGeminiLive = () => {
               }
             },
             systemInstruction: {
-              parts: [{ text: systemInstruction }]
+              parts: [{ text: `${systemInstruction}\n\n${PERSONA.getSystemInstruction()}` }]
             }
           }
         }));
@@ -167,17 +171,42 @@ export const useGeminiLive = () => {
           clientContent: {
             turns: [{
               role: "user",
-              parts: [{ text: "Hello! Please briefly introduce yourself in one sentence so I know your audio is working." }]
+              parts: [{ text: "[SYSTEM EVENT: The user has pressed Play to start the journey. Briefly introduce yourself as Vidya and say 'Let's go!' to prompt them to start scrolling.]" }]
             }],
             turnComplete: true
           }
         };
         ws.send(JSON.stringify(initialMessage));
 
+        // VAD state
+        let isSpeakingCurrently = false;
+        let silenceTimer: NodeJS.Timeout | null = null;
+
         // Start sending mic data
         workletNode.port.onmessage = (event) => {
           if (ws.readyState === WebSocket.OPEN) {
             const float32Array = event.data as Float32Array;
+            
+            // Voice Activity Detection (RMS volume)
+            let sum = 0;
+            for (let i = 0; i < float32Array.length; i++) {
+              sum += float32Array[i] * float32Array[i];
+            }
+            const rms = Math.sqrt(sum / float32Array.length);
+            
+            if (rms > 0.01) {
+              if (!isSpeakingCurrently) {
+                isSpeakingCurrently = true;
+                // Expose state (can trigger useEffects in App)
+                setIsUserSpeaking(true);
+              }
+              if (silenceTimer) clearTimeout(silenceTimer);
+              silenceTimer = setTimeout(() => {
+                isSpeakingCurrently = false;
+                setIsUserSpeaking(false);
+              }, 1500); // 1.5s of silence resets it
+            }
+
             const base64Pcm = float32ToPcm16Base64(float32Array);
             
             ws.send(JSON.stringify({
@@ -206,6 +235,7 @@ export const useGeminiLive = () => {
             for (const part of parts) {
               if (part.inlineData && part.inlineData.mimeType.startsWith('audio/pcm')) {
                 console.log("Received audio chunk from Gemini, playing...");
+                setHasSpokenOnce(true);
                 playAudioChunk(part.inlineData.data);
               }
             }
@@ -246,11 +276,26 @@ export const useGeminiLive = () => {
 
 
 
+  const sendMessage = useCallback((text: string, turnComplete: boolean = true) => {
+    if (!wsRef.current || wsRef.current.readyState !== WebSocket.OPEN) return;
+    
+    const message = {
+      clientContent: {
+        turns: [{
+          role: "user",
+          parts: [{ text }]
+        }],
+        turnComplete
+      }
+    };
+    wsRef.current.send(JSON.stringify(message));
+  }, []);
+
   useEffect(() => {
     return () => {
       disconnect();
     };
   }, [disconnect]);
 
-  return { connect, disconnect, isConnected, isSpeaking, error };
+  return { connect, disconnect, sendMessage, isConnected, isSpeaking, isUserSpeaking, hasSpokenOnce, error };
 };

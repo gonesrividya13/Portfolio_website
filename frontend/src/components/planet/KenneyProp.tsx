@@ -9,9 +9,23 @@ const AnimatedProp = ({ children, url }: { children: React.ReactNode, url: strin
   
   // Random offset so instances don't move in sync
   const [randomOffset] = React.useState(() => Math.random() * Math.PI * 2);
+  const worldPos = React.useMemo(() => new THREE.Vector3(), []);
   
   useFrame((state) => {
     if (!groupRef.current) return;
+    
+    // Performance Optimization: Occlusion Culling
+    // The planet is centered at Y = -8. Objects that rotate below Y = -8 
+    // are completely hidden behind the curvature of the planet.
+    // We can hide them to save the GPU from processing thousands of occluded vertices.
+    groupRef.current.getWorldPosition(worldPos);
+    if (worldPos.y < -8.5) {
+      groupRef.current.visible = false;
+      return; // Skip animation calculations if hidden
+    } else {
+      groupRef.current.visible = true;
+    }
+
     const time = state.clock.getElapsedTime();
     
     if (url.includes('pet')) {
@@ -42,9 +56,9 @@ const LampBulb = ({ scene }: { scene: THREE.Object3D }) => {
   
   // The highest point on Y axis is the lamp head. 
   // We place the bulb right at the top center.
-  const bulbY = box.max.y - 0.1;
+  const bulbY = box.max.y - 0.15;
   const bulbX = (box.min.x + box.max.x) / 2;
-  const bulbZ = box.min.z + 0.2; // Guessing the curve goes towards -Z
+  const bulbZ = box.min.z + 0.05; // Move slightly more outwards towards the edge
 
   return (
     <group position={[bulbX, bulbY, bulbZ]}>

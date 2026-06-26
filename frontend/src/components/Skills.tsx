@@ -56,7 +56,7 @@ export const Skills: React.FC<SkillsProps> = ({ skills, isLoading, error }) => {
                 .filter(s => s.category === category)
                 .map((skill, idx) => (
                   <motion.div
-                    key={skill._id}
+                    key={skill._id || skill.id || `skill-${idx}`}
                     initial={{ opacity: 0, scale: 0.9 }}
                     whileInView={{ opacity: 1, scale: 1 }}
                     viewport={{ once: true }}

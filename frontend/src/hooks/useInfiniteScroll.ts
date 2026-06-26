@@ -1,14 +1,15 @@
 import { useEffect, useState } from 'react';
 import { scrollStore } from '../store';
 
-export const useInfiniteScroll = () => {
+export const useInfiniteScroll = (enabled: boolean = true) => {
   const [distance, setDistance] = useState(scrollStore.getDistance());
 
   useEffect(() => {
     const handleWheel = (e: WheelEvent) => {
+      if (!enabled) return;
       // Prevent default scrolling
       e.preventDefault();
-      scrollStore.setDistance(e.deltaY * 0.00008); // Extremely slow crawling speed
+      scrollStore.setDistance(e.deltaY * 0.00003); // Extremely slow crawling speed for guided tour
     };
 
     let touchStartY = 0;
@@ -17,14 +18,16 @@ export const useInfiniteScroll = () => {
     };
 
     const handleTouchMove = (e: TouchEvent) => {
+      if (!enabled) return;
       e.preventDefault();
       const currentY = e.touches[0].clientY;
       const deltaY = touchStartY - currentY;
-      scrollStore.setDistance(deltaY * 0.0002); // Extremely slow crawling speed
+      scrollStore.setDistance(deltaY * 0.00008); // Extremely slow crawling speed for guided tour
       touchStartY = currentY;
     };
 
     const handleKeyDown = (e: KeyboardEvent) => {
+      if (!enabled) return;
       // Speed of driving via keyboard
       const keySpeed = 0.001; // Extremely slow crawling speed
       
@@ -58,7 +61,7 @@ export const useInfiniteScroll = () => {
       window.removeEventListener('keydown', handleKeyDown);
       unsubscribe();
     };
-  }, []);
+  }, [enabled]);
 
   return distance;
 };

@@ -26,9 +26,16 @@ export const CutePlanet = () => {
   const buildingElevation = radius;
   const roadElevation = radius + 0.05;    
 
-  const scenery = useMemo(() => {
+  const { items, pondCenter } = useMemo(() => {
     return generatePlanetScenery(radius, buildingElevation, roadElevation);
   }, [radius, buildingElevation, roadElevation]);
+
+  const pondRotation = useMemo(() => {
+    if (!pondCenter) return new THREE.Euler();
+    const normal = pondCenter.clone().normalize();
+    const q = new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0, 1, 0), normal);
+    return new THREE.Euler().setFromQuaternion(q);
+  }, [pondCenter]);
 
   useFrame(() => {
     const distance = scrollStore.getDistance();
@@ -195,7 +202,7 @@ export const CutePlanet = () => {
           </Sphere>
           
           <React.Suspense fallback={null}>
-            {scenery.map((item, idx) => (
+            {items.map((item, idx) => (
               <KenneyProp 
                 key={`prop-${idx}`}
                 url={item.url}
@@ -206,6 +213,14 @@ export const CutePlanet = () => {
               />
             ))}
           </React.Suspense>
+
+          {/* Render the Pond */}
+          {pondCenter && (
+            <mesh position={pondCenter} rotation={pondRotation}>
+              <cylinderGeometry args={[0.5, 0.5, 0.05, 16]} />
+              <meshStandardMaterial color="#3b82f6" roughness={0.1} metalness={0.8} />
+            </mesh>
+          )}
         </group>
 
         {/* The Driving Car (Stationary at Top) */}
