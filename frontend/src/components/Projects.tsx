@@ -50,7 +50,7 @@ export const Projects: React.FC<ProjectsProps> = ({ projects, isLoading, error }
             >
               <div className="flex items-start justify-between">
                 <span className="text-xs uppercase tracking-widest text-neutral-600 dark:text-neutral-400">
-                  {project.tags?.slice(0, 2).join(' · ') || 'Fullstack'}
+                  {project.technologies?.slice(0, 2).join(' · ') || 'Fullstack'}
                 </span>
                 <ArrowUpRight className="h-5 w-5 text-neutral-500 transition group-hover:text-slate-900 dark:group-hover:text-white" />
               </div>

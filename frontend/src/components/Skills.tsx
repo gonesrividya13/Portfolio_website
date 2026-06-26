@@ -56,19 +56,16 @@ export const Skills: React.FC<SkillsProps> = ({ skills, isLoading, error }) => {
                 .filter(s => s.category === category)
                 .map((skill, idx) => (
                   <motion.div
-                    key={skill._id || skill.id || `skill-${idx}`}
+                    key={skill.id || `skill-${idx}`}
                     initial={{ opacity: 0, scale: 0.9 }}
                     whileInView={{ opacity: 1, scale: 1 }}
                     viewport={{ once: true }}
                     transition={{ delay: (catIdx * 0.1) + (idx * 0.05) }}
                     className="group flex items-center space-x-3 rounded-xl bg-white/40 dark:bg-black/40 p-4 transition-colors hover:bg-indigo-50 dark:hover:bg-indigo-900/20"
                   >
-                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-indigo-100 text-xl text-indigo-600 dark:bg-indigo-900/50 dark:text-indigo-400 group-hover:scale-110 transition-transform">
-                      {skill.icon}
-                    </div>
                     <div>
                       <h4 className="font-medium text-slate-900 dark:text-white">{skill.name}</h4>
-                      <p className="text-sm text-neutral-500 dark:text-neutral-400">{skill.proficiency}</p>
+                      <p className="text-sm text-neutral-500 dark:text-neutral-400">{skill.proficiencyLevel}</p>
                     </div>
                   </motion.div>
                 ))}

@@ -180,7 +180,7 @@ export const useGeminiLive = () => {
 
         // VAD state
         let isSpeakingCurrently = false;
-        let silenceTimer: NodeJS.Timeout | null = null;
+        let silenceTimer: ReturnType<typeof setTimeout> | null = null;
 
         // Start sending mic data
         workletNode.port.onmessage = (event) => {

@@ -25,7 +25,7 @@ function App() {
   const hasStarted = hasSpokenOnce;
   const distance = useInfiniteScroll(hasStarted);
   
-  const idleTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const idleTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const resetIdleTimer = () => {
     if (idleTimerRef.current) clearTimeout(idleTimerRef.current);
