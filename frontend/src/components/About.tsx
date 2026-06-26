@@ -1,145 +1,75 @@
 import React from 'react';
-import type { Skill } from '../types';
-import { Layers, Cpu, Database, Wrench, Sparkles } from 'lucide-react';
+import { motion } from 'framer-motion';
 
-interface AboutProps {
-  skills: Skill[];
-  isLoading: boolean;
-  error: string | null;
-}
-
-export const About: React.FC<AboutProps> = ({ skills, isLoading, error }) => {
-  // Group skills by category
-  const categories = skills.reduce((acc, skill) => {
-    const cat = skill.category || 'Other';
-    if (!acc[cat]) {
-      acc[cat] = [];
-    }
-    acc[cat].push(skill);
-    return acc;
-  }, {} as Record<string, Skill[]>);
-
-  const getCategoryIcon = (category: string) => {
-    switch (category.toLowerCase()) {
-      case 'frontend':
-        return <Layers className="text-cyan-400" size={20} />;
-      case 'backend':
-        return <Cpu className="text-indigo-400" size={20} />;
-      case 'database':
-        return <Database className="text-purple-400" size={20} />;
-      case 'tool':
-      case 'tools':
-        return <Wrench className="text-amber-400" size={20} />;
-      default:
-        return <Sparkles className="text-pink-400" size={20} />;
-    }
-  };
-
-  const getProficiencyStyle = (level: string) => {
-    switch (level.toLowerCase()) {
-      case 'advanced':
-      case 'expert':
-        return 'bg-indigo-500/10 text-indigo-400 border-indigo-500/30';
-      case 'intermediate':
-        return 'bg-cyan-500/10 text-cyan-400 border-cyan-500/30';
-      default:
-        return 'bg-slate-800 text-slate-400 border-slate-750';
-    }
-  };
-
+export const About: React.FC = () => {
   return (
-    <section id="about" className="py-24 border-t border-slate-800/60 bg-slate-900/30 relative">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Section Title */}
-        <div className="text-center max-w-3xl mx-auto mb-16">
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
-            About & Skills
-          </h2>
-          <div className="w-12 h-1 bg-indigo-500 mx-auto mt-4 rounded-full"></div>
-          <p className="mt-4 text-slate-400">
-            A developer who loves crafting robust architecture, clean code, and delightful user experiences.
-          </p>
-        </div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
-          {/* Bio on the Left */}
-          <div className="lg:col-span-5 space-y-6">
-            <h3 className="text-xl font-bold text-white flex items-center gap-2">
-              My Journey
-            </h3>
-            <p className="text-slate-300 leading-relaxed">
-              I am a software engineer with experience building both frontend layouts and backend APIs. My focus lies in designing systems that are scalable, maintainable, and user-centric. 
+    <section id="about" className="relative z-10 mx-auto max-w-6xl px-6 py-24">
+      <div className="grid gap-12 md:grid-cols-[1fr_1.5fr] md:gap-24">
+        <motion.div 
+          initial={{ opacity: 0, x: -30 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8 }}
+          className="relative h-[400px] overflow-hidden rounded-4xl md:h-auto glass p-2"
+        >
+          {/* Placeholder for the user's image */}
+          <div className="w-full h-full rounded-[30px] overflow-hidden bg-white/10 dark:bg-black/20 backdrop-blur-md border border-black/5 dark:border-white/10 relative">
+            <div className="absolute inset-0 bg-gradient-to-tr from-white/5 to-transparent dark:from-black/10 opacity-50" />
+            <img 
+              src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=1000&auto=format&fit=crop" 
+              alt="Portrait" 
+              className="w-full h-full object-cover opacity-80 mix-blend-luminosity hover:mix-blend-normal transition-all duration-700 hover:scale-105"
+            />
+          </div>
+        </motion.div>
+        
+        <div className="flex flex-col justify-center">
+          <motion.h2 
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="text-3xl font-semibold md:text-5xl font-display"
+          >
+            The <span className="text-gradient">person</span> behind the code
+          </motion.h2>
+          
+          <motion.div 
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.2, duration: 0.6 }}
+            className="mt-8 space-y-6 text-lg text-neutral-600 dark:text-neutral-400"
+          >
+            <p>
+              I'm a passionate developer focused on crafting immersive digital experiences. With a background in both creative design and software engineering, I bridge the gap between aesthetics and performance.
             </p>
-            <p className="text-slate-350 leading-relaxed text-sm">
-              I enjoy solving complex problems and collaborating with teams to build digital products. From database performance tuning to crafting accessible React components, I aim to bridge the gap between design and implementation.
+            <p>
+              My approach combines cutting-edge web technologies like WebGL and React with minimalist design principles to create interfaces that feel alive.
             </p>
-            <div className="p-4 bg-slate-800/40 border border-slate-800 rounded-lg">
-              <span className="text-xs text-indigo-400 font-mono block mb-1">Philosophy</span>
-              <p className="text-xs text-slate-400 italic">
-                "Simplicity is the soul of efficiency. The best systems are those that solve problems with minimal friction."
-              </p>
+          </motion.div>
+          
+          <motion.div 
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.4, duration: 0.6 }}
+            className="mt-12 grid grid-cols-2 gap-6 sm:grid-cols-3"
+          >
+            <div>
+              <p className="text-4xl font-semibold text-slate-900 dark:text-white">5+</p>
+              <p className="mt-2 text-sm text-neutral-600 dark:text-neutral-400">Years experience</p>
             </div>
-          </div>
+            <div>
+              <p className="text-4xl font-semibold text-slate-900 dark:text-white">50+</p>
+              <p className="mt-2 text-sm text-neutral-600 dark:text-neutral-400">Projects shipped</p>
+            </div>
+            <div>
+              <p className="text-4xl font-semibold text-slate-900 dark:text-white">100%</p>
+              <p className="mt-2 text-sm text-neutral-600 dark:text-neutral-400">Client satisfaction</p>
+            </div>
+          </motion.div>
 
-          {/* Skills on the Right */}
-          <div className="lg:col-span-7 space-y-8">
-            <h3 className="text-xl font-bold text-white">
-              Technical Stack
-            </h3>
-
-            {isLoading && (
-              <div className="flex flex-col items-center justify-center py-12 space-y-4">
-                <div className="w-8 h-8 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin"></div>
-                <p className="text-sm text-slate-450">Loading skills data...</p>
-              </div>
-            )}
-
-            {error && (
-              <div className="p-4 bg-rose-500/10 border border-rose-500/20 text-rose-400 rounded-lg text-sm">
-                Could not retrieve skills data. Please verify backend connection.
-              </div>
-            )}
-
-            {!isLoading && !error && Object.keys(categories).length === 0 && (
-              <div className="text-sm text-slate-450 italic py-6">
-                No skills seeded in the database.
-              </div>
-            )}
-
-            {!isLoading && !error && Object.keys(categories).length > 0 && (
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                {Object.entries(categories).map(([category, skillList]) => (
-                  <div 
-                    key={category} 
-                    className="p-5 bg-slate-900/50 border border-slate-800/80 rounded-xl hover:border-slate-700/80 transition-all group"
-                  >
-                    <div className="flex items-center gap-3 mb-4 pb-2 border-b border-slate-800/60">
-                      {getCategoryIcon(category)}
-                      <span className="font-bold text-white text-base tracking-wide">
-                        {category}
-                      </span>
-                    </div>
-
-                    <div className="flex flex-wrap gap-2.5">
-                      {skillList.map((skill) => (
-                        <div 
-                          key={skill.id}
-                          className={`flex items-center gap-1.5 px-3 py-1 border rounded-full text-xs font-medium transition-all hover:scale-102 cursor-default ${
-                            getProficiencyStyle(skill.proficiencyLevel)
-                          }`}
-                        >
-                          <span>{skill.name}</span>
-                          <span className="text-[10px] opacity-75 font-normal">
-                            ({skill.proficiencyLevel})
-                          </span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
         </div>
       </div>
     </section>

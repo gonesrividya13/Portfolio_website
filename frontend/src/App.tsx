@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
+import { motion, useMotionValue, useTransform } from 'framer-motion';
 import { Navbar } from './components/Navbar';
 import { Hero } from './components/Hero';
-import { ChatRoom } from './components/ChatRoom';
+import { AgentInterview } from './components/AgentInterview';
 import { About } from './components/About';
 import { ExperienceComponent } from './components/Experience';
 import { Projects } from './components/Projects';
@@ -9,150 +10,106 @@ import { Contact } from './components/Contact';
 import { Footer } from './components/Footer';
 import { getProjects, getSkills, getExperiences } from './services/api';
 import type { Project, Skill, Experience } from './types';
-import { SwaggerResume } from './components/SwaggerResume';
-import { DispatchVisualizer } from './components/DispatchVisualizer';
-import { AwsSandbox } from './components/AwsSandbox';
+import { Scroll3DCanvas } from './components/Scroll3DCanvas';
+import { useInfiniteScroll } from './hooks/useInfiniteScroll';
+
+import { ScrollCard } from './components/ScrollCard';
+import { Skills } from './components/Skills';
 
 function App() {
-  const [activeSection, setActiveSection] = useState('home');
+  const distance = useInfiniteScroll();
+  
+  // Recreate the Day/Night color cycle
+  const motionDistance = useMotionValue(0);
+  const backgroundColor = useTransform(
+    motionDistance,
+    [0, 0.25, 0.5, 0.75, 1],
+    ['#e0f2fe', '#fecdd3', '#1e1b4b', '#020617', '#e0f2fe'] // Day -> Sunset -> Night -> Sunrise -> Day
+  );
+
+  useEffect(() => {
+    // 1.0 is a full cycle (syncs with CutePlanet.tsx)
+    const cycle = (distance * 0.5) % 1.0;
+    const normalizedCycle = cycle < 0 ? 1.0 + cycle : cycle;
+    motionDistance.set(normalizedCycle);
+
+    // Toggle Tailwind dark mode based on time of day
+    if (normalizedCycle > 0.20 && normalizedCycle < 0.80) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  }, [distance, motionDistance]);
+
+  // Total length of the scrolling timeline before it loops back to the Intro
+  const LOOP_LENGTH = 10.0;
+  
   const [projects, setProjects] = useState<Project[]>([]);
   const [skills, setSkills] = useState<Skill[]>([]);
   const [experiences, setExperiences] = useState<Experience[]>([]);
-
   const [loading, setLoading] = useState({ projects: true, skills: true, experiences: true });
-  const [errors, setErrors] = useState<{ projects: string | null; skills: string | null; experiences: string | null }>({
-    projects: null,
-    skills: null,
-    experiences: null,
-  });
 
-  // Fetch all backend data
   useEffect(() => {
     const fetchData = async () => {
-      // Fetch projects
       try {
-        const data = await getProjects();
-        setProjects(data);
+        const [projData, skillData, expData] = await Promise.all([
+          getProjects(), getSkills(), getExperiences()
+        ]);
+        setProjects(projData);
+        setSkills(skillData);
+        setExperiences(expData);
       } catch (err) {
-        console.error('Error fetching projects:', err);
-        const errMsg = err instanceof Error ? err.message : 'Error fetching projects';
-        setErrors((prev) => ({ ...prev, projects: errMsg }));
+        console.error('API Error:', err);
       } finally {
-        setLoading((prev) => ({ ...prev, projects: false }));
-      }
-
-      // Fetch skills
-      try {
-        const data = await getSkills();
-        setSkills(data);
-      } catch (err) {
-        console.error('Error fetching skills:', err);
-        const errMsg = err instanceof Error ? err.message : 'Error fetching skills';
-        setErrors((prev) => ({ ...prev, skills: errMsg }));
-      } finally {
-        setLoading((prev) => ({ ...prev, skills: false }));
-      }
-
-      // Fetch experiences
-      try {
-        const data = await getExperiences();
-        setExperiences(data);
-      } catch (err) {
-        console.error('Error fetching experiences:', err);
-        const errMsg = err instanceof Error ? err.message : 'Error fetching experiences';
-        setErrors((prev) => ({ ...prev, experiences: errMsg }));
-      } finally {
-        setLoading((prev) => ({ ...prev, experiences: false }));
+        setLoading({ projects: false, skills: false, experiences: false });
       }
     };
-
     fetchData();
   }, []);
 
-  // IntersectionObserver to set active section
-  useEffect(() => {
-    const sections = ['home', 'ai-room', 'architecture', 'about', 'experience', 'projects', 'contact'];
-    
-    const observerOptions = {
-      root: null,
-      rootMargin: '-30% 0px -50% 0px', // Trigger when section occupies the middle of the viewport
-      threshold: 0,
-    };
-
-    const observerCallback = (entries: IntersectionObserverEntry[]) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          setActiveSection(entry.target.id);
-        }
-      });
-    };
-
-    const observer = new IntersectionObserver(observerCallback, observerOptions);
-
-    sections.forEach((id) => {
-      const el = document.getElementById(id);
-      if (el) observer.observe(el);
-    });
-
-    return () => {
-      sections.forEach((id) => {
-        const el = document.getElementById(id);
-        if (el) observer.unobserve(el);
-      });
-    };
-  }, []);
-
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 selection:bg-indigo-600/30 selection:text-indigo-200 antialiased scroll-smooth">
-      {/* Background radial glow */}
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-indigo-950/20 via-slate-950 to-slate-950 pointer-events-none"></div>
+    <motion.div 
+      style={{ backgroundColor }}
+      className="fixed inset-0 overflow-hidden text-slate-900 dark:text-slate-100 selection:bg-indigo-600/30 dark:selection:bg-white/20 selection:text-indigo-900 dark:selection:text-white"
+    >
+      {/* 3D Background Layer */}
+      <div className="absolute inset-0 z-0">
+        <Scroll3DCanvas />
+      </div>
 
-      <Navbar activeSection={activeSection} />
-      
-      <main className="relative">
-        <Hero />
-        <ChatRoom />
-
-        <section id="architecture" className="py-20 relative px-4 sm:px-6 lg:px-8">
-          <div className="max-w-7xl mx-auto">
-            <div className="text-center mb-16">
-              <h2 className="text-4xl md:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-indigo-500 mb-4 tracking-tight">
-                Backend & Architecture Showcase
-              </h2>
-              <p className="text-lg text-slate-400 max-w-2xl mx-auto">
-                Interact with the systems that power this portfolio. From distributed event pipelines to simulated cloud workflows.
-              </p>
-            </div>
-            
-            <SwaggerResume />
-            <DispatchVisualizer />
-            <AwsSandbox />
+      {/* Foreground Continuous Scrolling Track */}
+      <div className="absolute inset-0 pointer-events-none z-10 overflow-hidden">
+        
+        {/* Card 1: Intro (Left) */}
+        <ScrollCard distance={distance} centerDistance={0} loopLength={LOOP_LENGTH} align="left">
+          <Hero />
+          <div className="mt-8">
+            <About />
           </div>
-        </section>
-        
-        <About 
-          skills={skills} 
-          isLoading={loading.skills} 
-          error={errors.skills} 
-        />
-        
-        <ExperienceComponent 
-          experiences={experiences} 
-          isLoading={loading.experiences} 
-          error={errors.experiences} 
-        />
-        
-        <Projects 
-          projects={projects} 
-          isLoading={loading.projects} 
-          error={errors.projects} 
-        />
-        
-        <Contact />
-      </main>
+        </ScrollCard>
 
-      <Footer />
-    </div>
+        {/* Card 2: Experience (Right) */}
+        <ScrollCard distance={distance} centerDistance={2} loopLength={LOOP_LENGTH} align="right">
+          <ExperienceComponent experiences={experiences} isLoading={loading.experiences} error={null} />
+        </ScrollCard>
+
+        {/* Card 3: Projects (Left) */}
+        <ScrollCard distance={distance} centerDistance={4} loopLength={LOOP_LENGTH} align="left">
+          <Projects projects={projects} isLoading={loading.projects} error={null} />
+        </ScrollCard>
+
+        {/* Card 4: Skills (Right) */}
+        <ScrollCard distance={distance} centerDistance={6} loopLength={LOOP_LENGTH} align="right">
+          <Skills skills={skills} isLoading={loading.skills} error={null} />
+        </ScrollCard>
+
+        {/* Card 5: AI Agent Interview (Center) */}
+        <ScrollCard distance={distance} centerDistance={8} loopLength={LOOP_LENGTH} align="center">
+          <AgentInterview />
+        </ScrollCard>
+
+      </div>
+    </motion.div>
   );
 }
 

@@ -79,21 +79,21 @@ export const Contact: React.FC = () => {
   };
 
   return (
-    <section id="contact" className="py-24 border-t border-slate-800/60 bg-slate-900/10">
+    <section id="contact" className="py-24 border-t border-black/10 dark:border-slate-800/60 bg-black/5 dark:bg-slate-900/10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Title */}
         <div className="text-center max-w-3xl mx-auto mb-16">
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
+          <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight">
             Get In Touch
           </h2>
           <div className="w-12 h-1 bg-indigo-500 mx-auto mt-4 rounded-full"></div>
-          <p className="mt-4 text-slate-400">
+          <p className="mt-4 text-neutral-600 dark:text-slate-400">
             Have a question or want to work together? Drop a message and I'll get back to you soon.
           </p>
         </div>
 
         <div className="max-w-2xl mx-auto">
-          <div className="p-8 bg-slate-900/50 border border-slate-800 rounded-2xl shadow-xl backdrop-blur-sm">
+          <div className="p-8 bg-black/5 dark:bg-slate-900/50 border border-black/10 dark:border-slate-800 rounded-2xl shadow-xl backdrop-blur-sm">
             
             {/* Status Notifications */}
             {status.type === 'success' && (
@@ -126,8 +126,8 @@ export const Contact: React.FC = () => {
                     name="name"
                     value={formData.name}
                     onChange={handleInputChange}
-                    className={`w-full pl-10 pr-4 py-3 bg-slate-950/60 border rounded-xl text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all ${
-                      errors.name ? 'border-rose-500/50' : 'border-slate-800'
+                    className={`w-full pl-10 pr-4 py-3 bg-white dark:bg-slate-950/60 border rounded-xl text-sm text-slate-900 dark:text-slate-200 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all ${
+                      errors.name ? 'border-rose-500/50' : 'border-black/20 dark:border-slate-800'
                     }`}
                     placeholder="John Doe"
                     disabled={isSubmitting}
@@ -155,8 +155,8 @@ export const Contact: React.FC = () => {
                     name="email"
                     value={formData.email}
                     onChange={handleInputChange}
-                    className={`w-full pl-10 pr-4 py-3 bg-slate-950/60 border rounded-xl text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all ${
-                      errors.email ? 'border-rose-500/50' : 'border-slate-800'
+                    className={`w-full pl-10 pr-4 py-3 bg-white dark:bg-slate-950/60 border rounded-xl text-sm text-slate-900 dark:text-slate-200 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all ${
+                      errors.email ? 'border-rose-500/50' : 'border-black/20 dark:border-slate-800'
                     }`}
                     placeholder="johndoe@example.com"
                     disabled={isSubmitting}
@@ -184,8 +184,8 @@ export const Contact: React.FC = () => {
                     rows={5}
                     value={formData.message}
                     onChange={handleInputChange}
-                    className={`w-full pl-10 pr-4 py-3.5 bg-slate-950/60 border rounded-xl text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all resize-none ${
-                      errors.message ? 'border-rose-500/50' : 'border-slate-800'
+                    className={`w-full pl-10 pr-4 py-3.5 bg-white dark:bg-slate-950/60 border rounded-xl text-sm text-slate-900 dark:text-slate-200 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all resize-none ${
+                      errors.message ? 'border-rose-500/50' : 'border-black/20 dark:border-slate-800'
                     }`}
                     placeholder="Hi! I want to talk about a potential project..."
                     disabled={isSubmitting}
