@@ -9,7 +9,6 @@ export const useInfiniteScroll = (enabled: boolean = true) => {
       if (!enabled) return;
 
       // Only allow scrolling the card if it is currently locked into place (active)
-      const target = e.target as HTMLElement;
       const scrollContainer = document.querySelector('.active-scroll-card');
       
       if (scrollContainer) {
@@ -20,14 +19,8 @@ export const useInfiniteScroll = (enabled: boolean = true) => {
         
         // If the active card has room to scroll
         if ((isScrollingDown && !isAtBottom) || (!isScrollingDown && !isAtTop)) {
-          if (target.closest('.active-scroll-card')) {
-            // Mouse is over the active card, let native browser scrolling happen for momentum
-            return;
-          } else {
-            // Manually scroll the card since the mouse isn't over it, slowed down by 50%
-            scrollContainer.scrollTop += e.deltaY * 0.5;
-          }
-          // We handled the scroll manually, do not advance the globe
+          // Always manually scroll the card to control and scale down the speed
+          scrollContainer.scrollTop += e.deltaY * 0.2;
           e.preventDefault();
           return;
         }
@@ -51,7 +44,6 @@ export const useInfiniteScroll = (enabled: boolean = true) => {
       const deltaY = touchStartY - currentY;
       
       // Only allow scrolling the card if it is currently locked into place
-      const target = e.target as HTMLElement;
       const scrollContainer = document.querySelector('.active-scroll-card');
       
       if (scrollContainer) {
@@ -60,14 +52,8 @@ export const useInfiniteScroll = (enabled: boolean = true) => {
         const isAtTop = scrollContainer.scrollTop < 3;
         
         if ((isScrollingDown && !isAtBottom) || (!isScrollingDown && !isAtTop)) {
-          if (target.closest('.active-scroll-card')) {
-             // Native scrolling allowed for momentum
-             touchStartY = currentY;
-             return;
-          } else {
-             // Manually scroll the card since touch isn't over it, slowed down by 50%
-             scrollContainer.scrollTop += deltaY * 0.5;
-          }
+          // Always manually scroll the card to control and scale down the speed
+          scrollContainer.scrollTop += deltaY * 0.2;
           // We handled it, update touch start and do not advance globe
           touchStartY = currentY;
           e.preventDefault();

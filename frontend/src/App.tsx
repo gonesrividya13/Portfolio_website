@@ -165,7 +165,7 @@ function App() {
       {hasStarted && (
         <button
           onClick={() => setIsUIHidden(!isUIHidden)}
-          className="fixed bottom-6 left-6 z-50 flex items-center justify-center p-3 bg-white/10 dark:bg-black/40 backdrop-blur-md rounded-full shadow-lg border border-white/20 hover:bg-white/20 transition-all group"
+          className="fixed bottom-8 left-8 z-50 flex items-center justify-center p-3 bg-white/10 dark:bg-black/40 backdrop-blur-md rounded-full shadow-lg border border-white/20 hover:bg-white/20 transition-all group"
           title={isUIHidden ? "Show Portfolio Cards" : "Hide Portfolio Cards"}
         >
           {isUIHidden ? (

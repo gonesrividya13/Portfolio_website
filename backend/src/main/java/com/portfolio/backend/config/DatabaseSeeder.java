@@ -36,67 +36,75 @@ public class DatabaseSeeder implements CommandLineRunner {
     public void run(String... args) throws Exception {
         if (projectRepository.count() == 0) {
             Project project1 = new Project(
-                    "Personal Portfolio",
-                    "A modern portfolio web application showcasing projects, experiences, and skills.",
-                    Arrays.asList("React", "Spring Boot", "H2 Database", "Tailwind CSS"),
-                    "https://github.com/example/portfolio",
-                    "https://portfolio.example.com",
-                    "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=800&q=80"
+                    "Cloud Inventory Analytics Pipeline",
+                    "Built a real-time data pipeline on GCP using Apache Airflow and BigQuery, processing 10+ retail data streams for inventory analytics and developing Looker dashboards with partitioned datasets to track stock levels and enable anomaly detection across multi-million records.",
+                    Arrays.asList("GCP", "Apache Airflow", "BigQuery", "Looker", "Python"),
+                    "https://github.com/gonesrividya13",
+                    "",
+                    "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&q=80"
             );
 
             Project project2 = new Project(
-                    "E-Commerce Platform",
-                    "A full-featured e-commerce API supporting product management, cart operations, and order checkout.",
-                    Arrays.asList("Java", "Spring Boot", "PostgreSQL", "Docker"),
-                    "https://github.com/example/ecommerce",
-                    "https://ecommerce.example.com",
-                    "https://images.unsplash.com/photo-1557821552-17105176677c?auto=format&fit=crop&w=800&q=80"
+                    "Interactive 3D AI Portfolio",
+                    "A modern, interactive 3D web application showcasing my projects, experiences, and skills. Features an infinite scrolling 3D globe and a live AI voice assistant to guide users through the tour.",
+                    Arrays.asList("React", "Three.js", "Tailwind CSS", "Spring Boot", "Java"),
+                    "https://github.com/gonesrividya13/VidyaPortfolio",
+                    "",
+                    "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=800&q=80"
             );
 
-            Project project3 = new Project(
-                    "Task Management App",
-                    "A collaborative kanban board application with real-time updates and task assignment features.",
-                    Arrays.asList("React", "Node.js", "Express", "MongoDB", "Socket.io"),
-                    "https://github.com/example/taskmanager",
-                    "https://taskmanager.example.com",
-                    "https://images.unsplash.com/photo-1611224885990-ab7363d1f2a9?auto=format&fit=crop&w=800&q=80"
-            );
-
-            projectRepository.saveAll(Arrays.asList(project1, project2, project3));
+            projectRepository.saveAll(Arrays.asList(project1, project2));
             System.out.println("Seeded projects database successfully.");
         }
 
         if (skillRepository.count() == 0) {
-            Skill skill1 = new Skill("Java", "Backend", "Advanced");
-            Skill skill2 = new Skill("Spring Boot", "Backend", "Advanced");
-            Skill skill3 = new Skill("React", "Frontend", "Intermediate");
-            Skill skill4 = new Skill("JavaScript", "Frontend", "Advanced");
-            Skill skill5 = new Skill("SQL", "Database", "Intermediate");
-            Skill skill6 = new Skill("Git", "Tool", "Advanced");
-            Skill skill7 = new Skill("Docker", "Tool", "Intermediate");
-
-            skillRepository.saveAll(Arrays.asList(skill1, skill2, skill3, skill4, skill5, skill6, skill7));
+            skillRepository.saveAll(Arrays.asList(
+                    new Skill("Java", "Programming Languages", "Expert"),
+                    new Skill("Python", "Programming Languages", "Advanced"),
+                    new Skill("JavaScript", "Programming Languages", "Advanced"),
+                    new Skill("TypeScript", "Programming Languages", "Intermediate"),
+                    new Skill("Spring Boot", "Backend & APIs", "Expert"),
+                    new Skill("RESTful APIs", "Backend & APIs", "Expert"),
+                    new Skill("Microservices", "Backend & APIs", "Advanced"),
+                    new Skill("React.js", "Frontend Development", "Advanced"),
+                    new Skill("Angular", "Frontend Development", "Intermediate"),
+                    new Skill("AWS", "Cloud & DevOps", "Advanced"),
+                    new Skill("Docker", "Cloud & DevOps", "Advanced"),
+                    new Skill("CI/CD", "Cloud & DevOps", "Advanced"),
+                    new Skill("PostgreSQL", "Databases & Messaging", "Expert"),
+                    new Skill("MySQL", "Databases & Messaging", "Advanced"),
+                    new Skill("MongoDB", "Databases & Messaging", "Intermediate"),
+                    new Skill("Apache Kafka", "Databases & Messaging", "Advanced")
+            ));
             System.out.println("Seeded skills database successfully.");
         }
 
         if (experienceRepository.count() == 0) {
             Experience exp1 = new Experience(
-                    "Tech Solutions Inc.",
-                    "Senior Software Engineer",
-                    LocalDate.of(2023, 1, 15),
+                    "Uber",
+                    "Software Developer",
+                    LocalDate.of(2025, 8, 1),
                     null,
-                    "Led a team of 4 developers to build a microservices-based e-commerce platform. Optimized database queries, reducing response times by 30%."
+                    "Developed ride dispatch and trip lifecycle microservices using Java (Spring Boot), processing 400K+ daily events. Built REST APIs for pricing workflows handling 100K+ daily requests. Integrated AWS (S3, Lambda) with Python-based AI workflows (OpenAI APIs), automating handling of 50K+ user interactions. Managed PostgreSQL and MongoDB data layers for high-frequency workloads."
             );
 
             Experience exp2 = new Experience(
-                    "Creative Web Agency",
-                    "Software Engineer",
+                    "Infosys",
+                    "Software Developer",
                     LocalDate.of(2021, 6, 1),
-                    LocalDate.of(2023, 1, 10),
-                    "Developed and maintained interactive user interfaces using React. Integrated frontend features with Spring Boot backend REST APIs."
+                    LocalDate.of(2023, 6, 1),
+                    "Led event-driven data pipelines using Apache Kafka and Java across 3 enterprise applications, enabling reliable processing of 150K+ daily transactions. Owned backend modules for REST APIs using Java and Spring Boot. Implemented asynchronous processing workflows on Azure and engineered React-based UI components with TypeScript."
             );
 
-            experienceRepository.saveAll(Arrays.asList(exp1, exp2));
+            Experience exp3 = new Experience(
+                    "Dell Technologies",
+                    "Full Stack Developer",
+                    LocalDate.of(2020, 1, 1),
+                    LocalDate.of(2021, 5, 1),
+                    "Contributed to backend service development using Python (Django) and REST APIs. Assisted in designing MySQL database schemas using SQLAlchemy ORM managing 800K+ records. Developed Angular-based UI components using TypeScript and Bootstrap. Supported application deployments on AWS (EC2, S3) and containerization using Docker."
+            );
+
+            experienceRepository.saveAll(Arrays.asList(exp1, exp2, exp3));
             System.out.println("Seeded experiences database successfully.");
         }
 
@@ -104,7 +112,7 @@ public class DatabaseSeeder implements CommandLineRunner {
             ContactMessage message = new ContactMessage(
                     "Alice Smith",
                     "alice@example.com",
-                    "Hi! I love your portfolio. I would love to connect and discuss potential opportunities."
+                    "Hi Srividya! I love your portfolio. I would love to connect and discuss potential opportunities."
             );
             contactMessageRepository.save(message);
             System.out.println("Seeded contact messages database successfully.");

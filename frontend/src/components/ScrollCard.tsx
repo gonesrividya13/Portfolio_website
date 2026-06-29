@@ -47,7 +47,7 @@ export const ScrollCard: React.FC<ScrollCardProps> = ({ distance, centerDistance
     opacity = 1;
   }
   
-  const alignmentClass = align === 'left' ? 'justify-start' : align === 'right' ? 'justify-end' : 'justify-center';
+  const alignmentClass = align === 'left' ? 'justify-center md:justify-start' : align === 'right' ? 'justify-center md:justify-end' : 'justify-center';
 
   return (
     <div 

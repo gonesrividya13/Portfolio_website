@@ -16,9 +16,9 @@ export const About: React.FC = () => {
           <div className="w-full h-full rounded-[30px] overflow-hidden bg-white/10 dark:bg-black/20 backdrop-blur-md border border-black/5 dark:border-white/10 relative">
             <div className="absolute inset-0 bg-gradient-to-tr from-white/5 to-transparent dark:from-black/10 opacity-50" />
             <img 
-              src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=1000&auto=format&fit=crop" 
-              alt="Portrait" 
-              className="w-full h-full object-cover opacity-80 mix-blend-luminosity hover:mix-blend-normal transition-all duration-700 hover:scale-105"
+              src="/srividya-portrait.jpg" 
+              alt="Portrait of Srividya" 
+              className="w-full h-full object-cover opacity-90 grayscale hover:grayscale-0 transition-all duration-700 hover:scale-105"
             />
           </div>
         </motion.div>
@@ -29,7 +29,7 @@ export const About: React.FC = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            className="text-3xl font-semibold md:text-5xl font-display"
+            className="text-3xl font-semibold md:text-5xl font-display text-black dark:text-white"
           >
             The <span className="text-gradient">person</span> behind the code
           </motion.h2>
@@ -39,13 +39,13 @@ export const About: React.FC = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.2, duration: 0.6 }}
-            className="mt-8 space-y-6 text-lg text-neutral-600 dark:text-neutral-400"
+            className="mt-8 space-y-6 text-lg text-black dark:text-white"
           >
             <p>
-              I'm a passionate developer focused on crafting immersive digital experiences. With a background in both creative design and software engineering, I bridge the gap between aesthetics and performance.
+              I'm a Software Developer with around 4 years of experience building distributed backend systems. I specialize in Java, Spring Boot, and architecting scalable event-driven platforms.
             </p>
             <p>
-              My approach combines cutting-edge web technologies like WebGL and React with minimalist design principles to create interfaces that feel alive.
+              My expertise spans across mobility, finance, and healthcare platforms, delivering stable, production-ready systems that efficiently handle high-volume, real-time workloads.
             </p>
           </motion.div>
           
@@ -57,16 +57,16 @@ export const About: React.FC = () => {
             className="mt-12 grid grid-cols-2 gap-6 sm:grid-cols-3"
           >
             <div>
-              <p className="text-4xl font-semibold text-slate-900 dark:text-white">5+</p>
-              <p className="mt-2 text-sm text-neutral-600 dark:text-neutral-400">Years experience</p>
+              <p className="text-4xl font-semibold text-black dark:text-white">4</p>
+              <p className="mt-2 text-sm text-black dark:text-white">Years experience</p>
             </div>
             <div>
-              <p className="text-4xl font-semibold text-slate-900 dark:text-white">50+</p>
-              <p className="mt-2 text-sm text-neutral-600 dark:text-neutral-400">Projects shipped</p>
+              <p className="text-4xl font-semibold text-black dark:text-white">400K+</p>
+              <p className="mt-2 text-sm text-black dark:text-white">Daily events processed</p>
             </div>
             <div>
-              <p className="text-4xl font-semibold text-slate-900 dark:text-white">100%</p>
-              <p className="mt-2 text-sm text-neutral-600 dark:text-neutral-400">Client satisfaction</p>
+              <p className="text-4xl font-semibold text-black dark:text-white">100K+</p>
+              <p className="mt-2 text-sm text-black dark:text-white">Daily API requests</p>
             </div>
           </motion.div>
 
