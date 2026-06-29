@@ -9,8 +9,8 @@ export const Car = ({ radius }: { radius: number }) => {
 
   useFrame(({ clock }) => {
     if (groupRef.current) {
-      // Bouncing animation to simulate driving suspension
-      groupRef.current.position.y = Math.sin(clock.elapsedTime * 20) * 0.03;
+      // Bouncing animation to simulate driving suspension (slowed down)
+      groupRef.current.position.y = Math.sin(clock.elapsedTime * 2) * 0.03;
     }
   });
 

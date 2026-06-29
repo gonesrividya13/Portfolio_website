@@ -12,6 +12,7 @@ import { useInfiniteScroll } from './hooks/useInfiniteScroll';
 import { useIsMobile } from './hooks/useIsMobile';
 
 import { ScrollCard } from './components/ScrollCard';
+import { Navbar } from './components/Navbar';
 import { Skills } from './components/Skills';
 import { useLiveGuide } from './context/LiveGuideContext';
 import { LiveTourButton } from './components/LiveTourButton';
@@ -158,6 +159,7 @@ function App() {
       className="fixed inset-0 overflow-hidden text-slate-900 dark:text-slate-100 selection:bg-indigo-600/30 dark:selection:bg-white/20 selection:text-indigo-900 dark:selection:text-white"
     >
       <LiveTourButton />
+      {hasStarted && !isUIHidden && <Navbar />}
 
       {/* Toggle UI Button */}
       {hasStarted && (

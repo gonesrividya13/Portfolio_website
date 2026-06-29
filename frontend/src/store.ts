@@ -19,6 +19,17 @@ class ScrollStore {
     return this.currentDistance;
   }
 
+  scrollToDistance(targetMod: number, loopLength: number = 10) {
+    const currentMod = this.targetDistance % loopLength;
+    let diff = targetMod - currentMod;
+    
+    // Find shortest path on the cylinder
+    if (diff > loopLength / 2) diff -= loopLength;
+    if (diff < -loopLength / 2) diff += loopLength;
+    
+    this.targetDistance += diff;
+  }
+
   subscribe(listener: Listener) {
     this.listeners.add(listener);
     return () => this.listeners.delete(listener);

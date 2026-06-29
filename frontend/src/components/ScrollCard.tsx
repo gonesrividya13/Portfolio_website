@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef, useEffect } from 'react';
 
 interface ScrollCardProps {
   distance: number;
@@ -16,6 +16,15 @@ export const ScrollCard: React.FC<ScrollCardProps> = ({ distance, centerDistance
 
   // Render optimization: If the card is far away, we can just display:none
   const isVisible = Math.abs(diff) < 1.5;
+
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  // Reset scroll position to top whenever the card comes into view
+  useEffect(() => {
+    if (isVisible && scrollRef.current) {
+      scrollRef.current.scrollTop = 0;
+    }
+  }, [isVisible]);
 
   // Calculate Y offset and opacity
   let yOffset: number; // in vh
@@ -50,7 +59,8 @@ export const ScrollCard: React.FC<ScrollCardProps> = ({ distance, centerDistance
       }}
     >
       <div 
-        className={`w-full ${align === 'center' ? 'max-w-4xl' : 'md:w-1/2'} bg-white/20 dark:bg-black/30 backdrop-blur-md p-8 rounded-2xl border border-black/10 dark:border-white/10 shadow-2xl pointer-events-auto max-h-[85vh] overflow-y-auto`}
+        ref={scrollRef}
+        className={`w-full ${align === 'center' ? 'max-w-4xl' : 'md:w-1/2'} bg-white/20 dark:bg-black/30 backdrop-blur-md p-8 rounded-2xl border border-black/10 dark:border-white/10 shadow-2xl pointer-events-auto max-h-[85vh] overflow-y-auto scrollbar-hide ${Math.abs(diff) <= pauseRange ? 'active-scroll-card' : ''}`}
         style={{
           opacity: Math.max(0, Math.min(1, opacity)),
           WebkitBackdropFilter: 'blur(12px)',
