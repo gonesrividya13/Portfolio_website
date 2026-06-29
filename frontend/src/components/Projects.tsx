@@ -52,9 +52,9 @@ export const Projects: React.FC<ProjectsProps> = ({ projects, isLoading, error }
                 <span className="text-xs uppercase tracking-widest text-neutral-600 dark:text-neutral-400">
                   {project.technologies?.slice(0, 2).join(' · ') || 'Fullstack'}
                 </span>
-                <ArrowUpRight className="h-5 w-5 text-neutral-500 transition group-hover:text-slate-900 dark:group-hover:text-white" />
+                <ArrowUpRight className="h-5 w-5 text-neutral-500 transition group-hover:text-black dark:group-hover:text-white" />
               </div>
-              <h3 className="mt-6 text-2xl font-semibold text-slate-900 dark:text-white">{project.title}</h3>
+              <h3 className="mt-6 text-2xl font-semibold text-black dark:text-white">{project.title}</h3>
               <p className="mt-3 text-neutral-600 dark:text-neutral-400 line-clamp-2">
                 {project.description}
               </p>

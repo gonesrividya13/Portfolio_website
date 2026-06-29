@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, Code } from 'lucide-react';
 import { scrollStore } from '../store';
 
 export const Navbar: React.FC = () => {
@@ -48,7 +48,7 @@ export const Navbar: React.FC = () => {
         <div className="flex items-center justify-between h-12 md:h-14">
           {/* Logo */}
           <div className="flex items-center gap-2 cursor-pointer" onClick={(e) => handleLinkClick(e, 0)}>
-            <span className="font-bold text-xl tracking-tight text-slate-900 dark:text-white font-display">
+            <span className="font-bold text-xl tracking-tight text-black dark:text-white font-display">
               V<span className="text-neutral-500">.</span>
             </span>
           </div>
@@ -62,8 +62,8 @@ export const Navbar: React.FC = () => {
                   key={link.name}
                   href={`#${link.name.toLowerCase()}`}
                   onClick={(e) => handleLinkClick(e, link.targetDistance)}
-                  className={`text-sm font-medium transition-colors hover:text-slate-900 dark:hover:text-white ${
-                    isActive ? 'text-slate-900 dark:text-white border-b-2 border-indigo-500 pb-1' : 'text-neutral-600 dark:text-neutral-400'
+                  className={`text-sm font-medium transition-colors hover:text-black dark:hover:text-white ${
+                    isActive ? 'text-black dark:text-white border-b-2 border-indigo-500 pb-1' : 'text-neutral-600 dark:text-neutral-400'
                   }`}
                 >
                   {link.name}
@@ -73,9 +73,18 @@ export const Navbar: React.FC = () => {
             <a
               href="#contact"
               onClick={(e) => handleLinkClick(e, 8)}
-              className={`px-4 py-1.5 rounded-full border ${activeDistance === 8 ? 'border-indigo-500 text-indigo-500' : 'border-black/10 dark:border-white/10 text-slate-900 dark:text-white'} font-medium text-sm hover:bg-black/5 dark:hover:bg-white/5 transition-colors`}
+              className={`px-4 py-1.5 rounded-full border ${activeDistance === 8 ? 'border-indigo-500 text-indigo-500' : 'border-black/10 dark:border-white/10 text-black dark:text-white'} font-medium text-sm hover:bg-black/5 dark:hover:bg-white/5 transition-colors`}
             >
               Contact
+            </a>
+            <a
+              href="https://github.com/gonesrividya13"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-neutral-600 dark:text-neutral-400 hover:text-black dark:hover:text-white transition-colors ml-2"
+              title="GitHub Profile"
+            >
+              <Code size={20} />
             </a>
           </div>
 
@@ -83,7 +92,7 @@ export const Navbar: React.FC = () => {
           <div className="md:hidden flex items-center gap-4">
             <button
               onClick={() => setIsOpen(!isOpen)}
-              className="p-2 text-neutral-600 dark:text-neutral-400 hover:text-slate-900 dark:hover:text-white transition-colors focus:outline-none"
+              className="p-2 text-neutral-600 dark:text-neutral-400 hover:text-black dark:hover:text-white transition-colors focus:outline-none"
               aria-label="Toggle menu"
             >
               {isOpen ? <X size={24} /> : <Menu size={24} />}
@@ -106,7 +115,7 @@ export const Navbar: React.FC = () => {
                 onClick={(e) => handleLinkClick(e, link.targetDistance)}
                 className={`block px-3 py-2.5 rounded-lg text-base font-medium transition-colors ${
                   isActive 
-                    ? 'bg-black/10 dark:bg-white/10 text-slate-900 dark:text-white border-l-2 border-indigo-500' 
+                    ? 'bg-black/10 dark:bg-white/10 text-black dark:text-white border-l-2 border-indigo-500' 
                     : 'text-neutral-600 dark:text-neutral-400 hover:bg-black/5 dark:hover:bg-white/5'
                 }`}
               >
@@ -114,10 +123,20 @@ export const Navbar: React.FC = () => {
               </a>
             );
           })}
+          <div className="pt-2 border-t border-black/10 dark:border-white/10 mt-2 flex justify-center">
+            <a
+              href="https://github.com/gonesrividya13"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 px-3 py-2 text-neutral-600 dark:text-neutral-400 hover:text-black dark:hover:text-white transition-colors"
+            >
+              <Code size={20} /> <span>GitHub Profile</span>
+            </a>
+          </div>
           <a
             href="#contact"
             onClick={(e) => handleLinkClick(e, 8)}
-            className={`block text-center px-4 py-3 border ${activeDistance === 8 ? 'border-indigo-500 text-indigo-500' : 'border-black/10 dark:border-white/10 text-slate-900 dark:text-white'} rounded-full font-medium text-base hover:bg-black/5 dark:hover:bg-white/5 transition-colors`}
+            className={`block text-center px-4 py-3 border ${activeDistance === 8 ? 'border-indigo-500 text-indigo-500' : 'border-black/10 dark:border-white/10 text-black dark:text-white'} rounded-full font-medium text-base hover:bg-black/5 dark:hover:bg-white/5 transition-colors`}
           >
             Contact
           </a>

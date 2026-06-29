@@ -48,7 +48,7 @@ export const Skills: React.FC<SkillsProps> = ({ skills, isLoading, error }) => {
             viewport={{ once: true }}
             transition={{ delay: catIdx * 0.1 }}
           >
-            <h3 className="mb-6 text-xl font-medium text-slate-900 dark:text-white border-b border-black/10 dark:border-white/10 pb-2">
+            <h3 className="mb-6 text-xl font-medium text-black dark:text-white border-b border-black/10 dark:border-white/10 pb-2">
               {category}
             </h3>
             <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3">
@@ -64,7 +64,7 @@ export const Skills: React.FC<SkillsProps> = ({ skills, isLoading, error }) => {
                     className="group flex items-center space-x-3 rounded-xl bg-white/40 dark:bg-black/40 p-4 transition-colors hover:bg-indigo-50 dark:hover:bg-indigo-900/20"
                   >
                     <div>
-                      <h4 className="font-medium text-slate-900 dark:text-white">{skill.name}</h4>
+                      <h4 className="font-medium text-black dark:text-white">{skill.name}</h4>
                       <p className="text-sm text-neutral-500 dark:text-neutral-400">{skill.proficiencyLevel}</p>
                     </div>
                   </motion.div>

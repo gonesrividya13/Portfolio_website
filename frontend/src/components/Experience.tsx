@@ -53,7 +53,7 @@ export const ExperienceComponent: React.FC<ExperienceProps> = ({ experiences, is
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Title */}
         <div className="text-center max-w-3xl mx-auto mb-16">
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+          <h2 className="text-3xl sm:text-4xl font-extrabold text-black dark:text-white tracking-tight">
             Work Experience
           </h2>
           <div className="w-12 h-1 bg-indigo-500 mx-auto mt-4 rounded-full"></div>
@@ -96,7 +96,7 @@ export const ExperienceComponent: React.FC<ExperienceProps> = ({ experiences, is
                     {/* Header */}
                     <div className="flex flex-col md:flex-row md:items-center justify-between gap-2 mb-4">
                       <div>
-                        <h3 className="text-lg font-bold text-slate-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
+                        <h3 className="text-lg font-bold text-black dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
                           {exp.role}
                         </h3>
                         <span className="text-sm font-semibold text-neutral-600 dark:text-slate-400">

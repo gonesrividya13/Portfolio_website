@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { sendContactMessage } from '../services/api';
-import { Send, CheckCircle2, AlertCircle, Mail, User, MessageSquare } from 'lucide-react';
+import { Send, CheckCircle2, AlertCircle, Mail, User, MessageSquare, Code } from 'lucide-react';
 
 export const Contact: React.FC = () => {
   const [formData, setFormData] = useState({ name: '', email: '', message: '' });
@@ -83,7 +83,7 @@ export const Contact: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Title */}
         <div className="text-center max-w-3xl mx-auto mb-8">
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+          <h2 className="text-3xl sm:text-4xl font-extrabold text-black dark:text-white tracking-tight">
             Get In Touch
           </h2>
           <div className="w-12 h-1 bg-indigo-500 mx-auto mt-4 rounded-full"></div>
@@ -232,6 +232,21 @@ export const Contact: React.FC = () => {
                 )}
               </button>
             </form>
+            
+            {/* Footer with Source Code Link */}
+            <div className="mt-8 text-center">
+              <p className="text-sm text-neutral-600 dark:text-neutral-400">
+                Designed & Built by Vidya
+              </p>
+              <a 
+                href="https://github.com/gonesrividya13/VidyaPortfolio" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="mt-2 inline-flex items-center gap-1.5 text-xs text-indigo-600 dark:text-indigo-400 hover:text-indigo-500 transition-colors opacity-80 hover:opacity-100"
+              >
+                <Code size={14} /> View Source Code
+              </a>
+            </div>
           </div>
         </div>
       </div>

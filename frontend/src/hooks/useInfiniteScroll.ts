@@ -19,10 +19,15 @@ export const useInfiniteScroll = (enabled: boolean = true) => {
         
         // If the active card has room to scroll
         if ((isScrollingDown && !isAtBottom) || (!isScrollingDown && !isAtTop)) {
-          // Always manually scroll the card to control and scale down the speed
-          scrollContainer.scrollTop += e.deltaY * 0.2;
-          e.preventDefault();
-          return;
+          // If hovering over the card, let the browser handle it natively (for perfect mobile/trackpad physics)
+          if (scrollContainer.contains(e.target as Node)) {
+            return;
+          } else {
+            // If hovering outside, manually forward the scroll to the card at 1:1 speed
+            scrollContainer.scrollTop += e.deltaY;
+            e.preventDefault();
+            return;
+          }
         }
       }
 
@@ -52,12 +57,17 @@ export const useInfiniteScroll = (enabled: boolean = true) => {
         const isAtTop = scrollContainer.scrollTop < 3;
         
         if ((isScrollingDown && !isAtBottom) || (!isScrollingDown && !isAtTop)) {
-          // Always manually scroll the card to control and scale down the speed
-          scrollContainer.scrollTop += deltaY * 0.2;
-          // We handled it, update touch start and do not advance globe
-          touchStartY = currentY;
-          e.preventDefault();
-          return;
+          if (scrollContainer.contains(e.target as Node)) {
+            // We handled it via native scroll, update touch start and do not advance globe
+            touchStartY = currentY;
+            return;
+          } else {
+            // Manually scroll if dragging outside the card
+            scrollContainer.scrollTop += deltaY;
+            touchStartY = currentY;
+            e.preventDefault();
+            return;
+          }
         }
       }
 

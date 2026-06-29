@@ -34,7 +34,7 @@ export const LiveTourButton: React.FC = () => {
             initial={{ opacity: 0, y: 10, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 10, scale: 0.95 }}
-            className="bg-white dark:bg-slate-800 text-slate-900 dark:text-white p-4 rounded-2xl shadow-xl border border-slate-200 dark:border-slate-700 max-w-xs origin-bottom-right"
+            className="bg-white dark:bg-slate-800 text-black dark:text-white p-4 rounded-2xl shadow-xl border border-slate-200 dark:border-slate-700 max-w-xs origin-bottom-right"
           >
             <div className="flex justify-between items-start mb-2">
               <h4 className="font-bold text-sm">Interactive Tour</h4>

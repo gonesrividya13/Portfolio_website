@@ -73,10 +73,10 @@ export const AgentInterview: React.FC = () => {
           <div className="glass rounded-3xl flex flex-col h-[500px] bg-slate-100/50 dark:bg-black/40 border-black/10 dark:border-white/10">
             <div className="flex items-center gap-3 border-b border-black/5 dark:border-white/5 p-4 bg-black/5 dark:bg-white/5">
               <div className="bg-black/10 dark:bg-white/10 p-2 rounded-full">
-                <Sparkles className="w-5 h-5 text-slate-900 dark:text-white" />
+                <Sparkles className="w-5 h-5 text-black dark:text-white" />
               </div>
               <div>
-                <h3 className="font-medium text-slate-900 dark:text-white">Vidya's AI</h3>
+                <h3 className="font-medium text-black dark:text-white">Vidya's AI</h3>
                 <p className="text-xs text-neutral-600 dark:text-neutral-400 flex items-center gap-1">
                   <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
                   Online
@@ -95,13 +95,13 @@ export const AgentInterview: React.FC = () => {
                   >
                     {msg.role === 'agent' && (
                       <div className="w-8 h-8 rounded-full bg-black/10 dark:bg-white/10 flex items-center justify-center shrink-0">
-                        <Bot className="w-4 h-4 text-slate-900 dark:text-white" />
+                        <Bot className="w-4 h-4 text-black dark:text-white" />
                       </div>
                     )}
                     <div className={`px-4 py-2.5 rounded-2xl max-w-[80%] ${
                       msg.role === 'user' 
                         ? 'bg-slate-900 dark:bg-white text-white dark:text-black rounded-tr-sm' 
-                        : 'bg-black/5 dark:bg-white/10 text-slate-900 dark:text-white rounded-tl-sm'
+                        : 'bg-black/5 dark:bg-white/10 text-black dark:text-white rounded-tl-sm'
                     }`}>
                       <p className="text-sm leading-relaxed">{msg.content}</p>
                     </div>
@@ -114,7 +114,7 @@ export const AgentInterview: React.FC = () => {
                     className="flex gap-3 justify-start"
                   >
                     <div className="w-8 h-8 rounded-full bg-black/10 dark:bg-white/10 flex items-center justify-center shrink-0">
-                      <Bot className="w-4 h-4 text-slate-900 dark:text-white" />
+                      <Bot className="w-4 h-4 text-black dark:text-white" />
                     </div>
                     <div className="px-4 py-2.5 rounded-2xl bg-black/5 dark:bg-white/10 rounded-tl-sm flex items-center gap-2">
                       <Loader2 className="w-4 h-4 animate-spin text-neutral-500 dark:text-neutral-400" />
@@ -133,7 +133,7 @@ export const AgentInterview: React.FC = () => {
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
                   placeholder="Ask about my skills..."
-                  className="w-full bg-white dark:bg-white/5 border border-black/10 dark:border-white/10 rounded-full pl-5 pr-12 py-3 text-sm text-slate-900 dark:text-white placeholder-neutral-500 focus:outline-none focus:border-black/30 dark:focus:border-white/30 transition-colors"
+                  className="w-full bg-white dark:bg-white/5 border border-black/10 dark:border-white/10 rounded-full pl-5 pr-12 py-3 text-sm text-black dark:text-white placeholder-neutral-500 focus:outline-none focus:border-black/30 dark:focus:border-white/30 transition-colors"
                 />
                 <button 
                   type="submit"
