@@ -10,6 +10,7 @@ import type { Project, Skill, Experience } from './types';
 
 import { useInfiniteScroll } from './hooks/useInfiniteScroll';
 import { useIsMobile } from './hooks/useIsMobile';
+import { getResumeContextForSection } from './context/resumeContext';
 
 import { ScrollCard } from './components/ScrollCard';
 import { Navbar } from './components/Navbar';
@@ -82,51 +83,35 @@ function App() {
   // Total length of the scrolling timeline before it loops back to the Intro
   const LOOP_LENGTH = 10.0;
 
-  const lastTelemetryRef = useRef<number>(-1);
+  const lastTelemetryRef = useRef<string | number>('');
   const prevUserSpeakingRef = useRef<boolean>(false);
 
   useEffect(() => {
     if (!hasStarted) return;
+    if (!hasStarted) return;
     
-    const round = Math.floor(distance / 10) + 1;
-    const telemetryInterval = Math.floor(distance);
-    
+    // Calculate active Portfolio Section
+    const normalizedDistance = ((distance % LOOP_LENGTH) + LOOP_LENGTH) % LOOP_LENGTH;
+    let sectionIndex = Math.round(normalizedDistance / 2) % 5;
+    if (sectionIndex === 5) sectionIndex = 0;
+    const sectionNames = ["Intro", "Experience", "Projects", "Skills", "Reach Me Out"];
+    const currentSection = sectionNames[sectionIndex];
+
     let shouldSendTelemetry = false;
 
-    if (round < 3) {
-      // Round 1 & 2: Send telemetry every 1.0 distance
-      if (telemetryInterval !== lastTelemetryRef.current) {
-        lastTelemetryRef.current = telemetryInterval;
-        shouldSendTelemetry = true;
-      }
-    } else {
-      // Round 3+: Send telemetry only when the user STOPS speaking
-      if (!isUserSpeaking && prevUserSpeakingRef.current) {
-        shouldSendTelemetry = true;
-      }
+    // Only trigger telemetry when entering a new section
+    if (currentSection !== lastTelemetryRef.current) {
+      lastTelemetryRef.current = currentSection;
+      shouldSendTelemetry = true;
     }
-
+    
     prevUserSpeakingRef.current = isUserSpeaking;
 
     if (shouldSendTelemetry) {
-      // Calculate active Portfolio Section
-      const normalizedDistance = ((distance % LOOP_LENGTH) + LOOP_LENGTH) % LOOP_LENGTH;
-      let sectionIndex = Math.round(normalizedDistance / 2) % 5;
-      if (sectionIndex === 5) sectionIndex = 0;
-      const sectionNames = ["Intro", "Experience", "Projects", "Skills", "Reach Me Out"];
-      const currentSection = sectionNames[sectionIndex];
+      const sectionContext = getResumeContextForSection(currentSection);
 
-      // Calculate Globe Angle (0.0 to 1.0)
-      const cycle = (distance * 0.5) % 1.0;
-      const fracDist = cycle < 0 ? 1.0 + cycle : cycle;
-      
-      // Calculate Globe Rotation (1 to 5 per Round)
-      const rotation = Math.floor((distance % LOOP_LENGTH) / 2) + 1;
-
-      const message = `[TELEMETRY] Round: ${round} | Globe Rotation: ${rotation} | Round Distance: ${normalizedDistance.toFixed(2)} | Portfolio Section: ${currentSection} | Globe Angle: ${fracDist.toFixed(2)}`;
-      
-      const isPassive = round >= 3;
-      sendMessage(message, !isPassive);
+      const message = `[TELEMETRY] The user has scrolled to: ${currentSection}. Here is the exact resume segment for this section:\n${sectionContext}\n\nPlease make a short, spontaneous, and natural comment welcoming them to this section based on this context. Feel free to be creative and conversational!`;
+      sendMessage(message, true);
       resetIdleTimer();
     }
   }, [distance, isUserSpeaking, sendMessage, hasStarted, resetIdleTimer]);

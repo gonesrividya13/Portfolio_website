@@ -53,28 +53,62 @@ public class DatabaseSeeder implements CommandLineRunner {
                     "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=800&q=80"
             );
 
-            projectRepository.saveAll(Arrays.asList(project1, project2));
+            Project project3 = new Project(
+                    "Micro MCP (IoT)",
+                    "A C++ implementation of the Model Context Protocol (MCP) for IoT devices, enabling LLMs to securely interface with home automation systems via MQTT.",
+                    Arrays.asList("C++", "Python", "MQTT", "IoT", "LLMs"),
+                    "https://github.com/gonesrividya13/micro_mcp",
+                    "",
+                    "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=800&q=80"
+            );
+
+            projectRepository.saveAll(Arrays.asList(project1, project2, project3));
             System.out.println("Seeded projects database successfully.");
         }
 
         if (skillRepository.count() == 0) {
             skillRepository.saveAll(Arrays.asList(
+                    // Programming Languages
                     new Skill("Java", "Programming Languages", "Expert"),
                     new Skill("Python", "Programming Languages", "Advanced"),
                     new Skill("JavaScript", "Programming Languages", "Advanced"),
-                    new Skill("TypeScript", "Programming Languages", "Intermediate"),
+                    new Skill("TypeScript", "Programming Languages", "Advanced"),
+                    new Skill("C++", "Programming Languages", "Intermediate"),
+                    
+                    // Backend & APIs
                     new Skill("Spring Boot", "Backend & APIs", "Expert"),
                     new Skill("RESTful APIs", "Backend & APIs", "Expert"),
                     new Skill("Microservices", "Backend & APIs", "Advanced"),
+                    new Skill("GraphQL", "Backend & APIs", "Intermediate"),
+                    new Skill("FastAPI", "Backend & APIs", "Intermediate"),
+                    
+                    // Frontend
                     new Skill("React.js", "Frontend Development", "Advanced"),
                     new Skill("Angular", "Frontend Development", "Intermediate"),
+                    new Skill("Vue.js", "Frontend Development", "Intermediate"),
+                    new Skill("Tailwind CSS", "Frontend Development", "Advanced"),
+                    
+                    // Cloud & DevOps
                     new Skill("AWS", "Cloud & DevOps", "Advanced"),
+                    new Skill("GCP", "Cloud & DevOps", "Advanced"),
                     new Skill("Docker", "Cloud & DevOps", "Advanced"),
-                    new Skill("CI/CD", "Cloud & DevOps", "Advanced"),
+                    new Skill("Kubernetes", "Cloud & DevOps", "Intermediate"),
+                    new Skill("CI/CD (Jenkins/GitHub Actions)", "Cloud & DevOps", "Advanced"),
+                    
+                    // Databases
                     new Skill("PostgreSQL", "Databases & Messaging", "Expert"),
                     new Skill("MySQL", "Databases & Messaging", "Advanced"),
                     new Skill("MongoDB", "Databases & Messaging", "Intermediate"),
-                    new Skill("Apache Kafka", "Databases & Messaging", "Advanced")
+                    new Skill("Apache Kafka", "Databases & Messaging", "Advanced"),
+                    new Skill("Redis", "Databases & Messaging", "Intermediate"),
+                    
+                    // AI / ML
+                    new Skill("OpenAI APIs", "AI / Machine Learning", "Advanced"),
+                    new Skill("Pandas & NumPy", "AI / Machine Learning", "Intermediate"),
+                    
+                    // Testing & Quality
+                    new Skill("JUnit & Mockito", "Testing & Quality", "Advanced"),
+                    new Skill("Jest", "Testing & Quality", "Intermediate")
             ));
             System.out.println("Seeded skills database successfully.");
         }
