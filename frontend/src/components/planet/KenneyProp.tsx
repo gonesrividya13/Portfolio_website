@@ -3,6 +3,7 @@ import * as THREE from 'three';
 import { useGLTF, Clone } from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
 import { useInfiniteScroll } from '../../hooks/useInfiniteScroll';
+import { useIsMobile } from '../../hooks/useIsMobile';
 
 const AnimatedProp = ({ children, url }: { children: React.ReactNode, url: string }) => {
   const groupRef = React.useRef<THREE.Group>(null);
@@ -45,11 +46,14 @@ const AnimatedProp = ({ children, url }: { children: React.ReactNode, url: strin
 const LampBulb = ({ scene }: { scene: THREE.Object3D }) => {
   const distance = useInfiniteScroll();
   
+  const isMobile = useIsMobile();
+  
   // Calculate if it is night time
   const cycle = (distance * 0.5) % 1.0;
   const normalizedCycle = cycle < 0 ? 1.0 + cycle : cycle;
   // Day is roughly 0.80 to 1.0, and 0.0 to 0.20. Night is 0.20 to 0.80.
-  const isNight = normalizedCycle > 0.20 && normalizedCycle < 0.80;
+  // On mobile, force day mode (never night)
+  const isNight = !isMobile && (normalizedCycle > 0.20 && normalizedCycle < 0.80);
 
   // Dynamically find the top of the lamp using its bounding box!
   const box = React.useMemo(() => new THREE.Box3().setFromObject(scene), [scene]);
