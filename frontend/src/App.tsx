@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, lazy, Suspense, useCallback, useRef } from 'react';
 import { motion, useMotionValue, useTransform } from 'framer-motion';
 import { Hero } from './components/Hero';
 import { Contact } from './components/Contact';
@@ -7,7 +7,7 @@ import { ExperienceComponent } from './components/Experience';
 import { Projects } from './components/Projects';
 import { getProjects, getSkills, getExperiences } from './services/api';
 import type { Project, Skill, Experience } from './types';
-import { Scroll3DCanvas } from './components/Scroll3DCanvas';
+
 import { useInfiniteScroll } from './hooks/useInfiniteScroll';
 import { useIsMobile } from './hooks/useIsMobile';
 
@@ -16,7 +16,8 @@ import { Navbar } from './components/Navbar';
 import { Skills } from './components/Skills';
 import { useLiveGuide } from './context/LiveGuideContext';
 import { LiveTourButton } from './components/LiveTourButton';
-import { useRef } from 'react';
+
+const Scroll3DCanvas = lazy(() => import('./components/Scroll3DCanvas').then(module => ({ default: module.Scroll3DCanvas })));
 
 function App() {
   const { sendMessage, connect, hasSpokenOnce, isUserSpeaking } = useLiveGuide();
@@ -31,12 +32,12 @@ function App() {
   
   const idleTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const resetIdleTimer = () => {
+  const resetIdleTimer = useCallback(() => {
     if (idleTimerRef.current) clearTimeout(idleTimerRef.current);
     idleTimerRef.current = setTimeout(() => {
       sendMessage("[SYSTEM EVENT: The user has been lingering at this part of the tour for a while without scrolling to the next area. Gently nudge them to continue scrolling when they are ready.]");
     }, 30000); // 30 seconds
-  };
+  }, [sendMessage]);
 
   const startJourney = async () => {
     setIsPlayClicked(true);
@@ -224,8 +225,10 @@ function App() {
       )}
 
       {/* 3D Background Layer */}
-      <div className="absolute inset-0 z-0">
-        <Scroll3DCanvas />
+      <div className="fixed inset-0 z-0">
+        <Suspense fallback={null}>
+          <Scroll3DCanvas />
+        </Suspense>
       </div>
 
       {/* Foreground Continuous Scrolling Track */}

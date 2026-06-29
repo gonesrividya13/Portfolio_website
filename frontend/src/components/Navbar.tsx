@@ -18,7 +18,7 @@ export const Navbar: React.FC = () => {
     { name: 'Skills', targetDistance: 6 },
   ];
 
-  const handleLinkClick = (e: React.MouseEvent<HTMLAnchorElement>, targetDistance: number) => {
+  const handleLinkClick = (e: React.MouseEvent<HTMLElement>, targetDistance: number) => {
     e.preventDefault();
     setIsOpen(false);
     scrollStore.scrollToDistance(targetDistance);
@@ -47,7 +47,7 @@ export const Navbar: React.FC = () => {
       <div className="max-w-6xl mx-auto px-6">
         <div className="flex items-center justify-between h-12 md:h-14">
           {/* Logo */}
-          <div className="flex items-center gap-2 cursor-pointer" onClick={(e) => handleLinkClick(e as any, 0)}>
+          <div className="flex items-center gap-2 cursor-pointer" onClick={(e) => handleLinkClick(e, 0)}>
             <span className="font-bold text-xl tracking-tight text-slate-900 dark:text-white font-display">
               V<span className="text-neutral-500">.</span>
             </span>
