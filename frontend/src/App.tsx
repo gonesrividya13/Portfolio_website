@@ -129,7 +129,7 @@ function App() {
       sendMessage(message, !isPassive);
       resetIdleTimer();
     }
-  }, [distance, isUserSpeaking, sendMessage, hasStarted]);
+  }, [distance, isUserSpeaking, sendMessage, hasStarted, resetIdleTimer]);
   
   const [projects, setProjects] = useState<Project[]>([]);
   const [skills, setSkills] = useState<Skill[]>([]);
