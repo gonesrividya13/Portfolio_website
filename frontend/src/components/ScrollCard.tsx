@@ -45,12 +45,18 @@ export const ScrollCard: React.FC<ScrollCardProps> = ({ distance, centerDistance
       className={`absolute inset-0 flex flex-col md:flex-row items-center p-8 md:p-24 pointer-events-none ${alignmentClass}`}
       style={{
         transform: `translateY(${yOffset}vh)`,
-        opacity: Math.max(0, Math.min(1, opacity)),
         pointerEvents: Math.abs(diff) < pauseRange + 0.1 ? 'auto' : 'none',
         display: isVisible ? 'flex' : 'none'
       }}
     >
-      <div className={`w-full ${align === 'center' ? 'max-w-4xl' : 'md:w-1/2'} bg-white/20 dark:bg-black/30 backdrop-blur-md p-8 rounded-2xl border border-black/10 dark:border-white/10 shadow-2xl pointer-events-auto max-h-[85vh] overflow-y-auto`}>
+      <div 
+        className={`w-full ${align === 'center' ? 'max-w-4xl' : 'md:w-1/2'} bg-white/20 dark:bg-black/30 backdrop-blur-md p-8 rounded-2xl border border-black/10 dark:border-white/10 shadow-2xl pointer-events-auto max-h-[85vh] overflow-y-auto`}
+        style={{
+          opacity: Math.max(0, Math.min(1, opacity)),
+          WebkitBackdropFilter: 'blur(12px)',
+          transform: 'translateZ(0)'
+        }}
+      >
         {children}
       </div>
     </div>
