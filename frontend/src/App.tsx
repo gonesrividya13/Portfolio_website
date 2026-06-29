@@ -84,6 +84,7 @@ function App() {
   const LOOP_LENGTH = 10.0;
 
   const lastTelemetryRef = useRef<string | number>('');
+  const visitedSectionsRef = useRef<Set<string>>(new Set());
   const prevUserSpeakingRef = useRef<boolean>(false);
 
   useEffect(() => {
@@ -99,10 +100,13 @@ function App() {
 
     let shouldSendTelemetry = false;
 
-    // Only trigger telemetry when entering a new section
+    // Only trigger telemetry the FIRST time they enter a new section
     if (currentSection !== lastTelemetryRef.current) {
       lastTelemetryRef.current = currentSection;
-      shouldSendTelemetry = true;
+      if (!visitedSectionsRef.current.has(currentSection)) {
+        visitedSectionsRef.current.add(currentSection);
+        shouldSendTelemetry = true;
+      }
     }
     
     prevUserSpeakingRef.current = isUserSpeaking;
@@ -110,7 +114,7 @@ function App() {
     if (shouldSendTelemetry) {
       const sectionContext = getResumeContextForSection(currentSection);
 
-      const message = `[TELEMETRY] The user has scrolled to: ${currentSection}. Here is the exact resume segment for this section:\n${sectionContext}\n\nPlease make a short, spontaneous, and natural comment welcoming them to this section based on this context. Feel free to be creative and conversational!`;
+      const message = `[TELEMETRY] The user has scrolled to: ${currentSection}. Here is the exact resume segment for this section:\n${sectionContext}\n\nPlease make a spontaneous and natural comment welcoming them to this section. Elaborate a little on the key highlights from the context provided, keeping it conversational and engaging.`;
       sendMessage(message, true);
       resetIdleTimer();
     }

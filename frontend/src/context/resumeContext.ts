@@ -25,7 +25,11 @@ Full Stack Developer | Dell Technologies | India | Jan 2020 – May 2021
 ● Supported application deployments on AWS (EC2, S3) and containerization using Docker`;
   } else if (section === "Projects") {
     return `Currently viewing the Projects section. Full Details:
-Cloud Inventory Analytics Pipeline | Google Cloud Platform: Built a real-time data pipeline on GCP using Apache Airflow and BigQuery, processing 10+ retail data streams for inventory analytics and developing Looker dashboards with partitioned datasets to track stock levels and enable anomaly detection across multi-million records.`;
+Cloud Inventory Analytics Pipeline | Google Cloud Platform: Built a real-time data pipeline on GCP using Apache Airflow and BigQuery, processing 10+ retail data streams for inventory analytics and developing Looker dashboards with partitioned datasets to track stock levels and enable anomaly detection across multi-million records.
+
+Interactive 3D AI Portfolio: A modern, interactive 3D web application showcasing my projects, experiences, and skills. Features an infinite scrolling 3D globe and a live AI voice assistant to guide users through the tour.
+
+Micro MCP (IoT): A C++ implementation of the Model Context Protocol (MCP) for IoT devices, enabling LLMs to securely interface with home automation systems via MQTT.`;
   } else if (section === "Skills") {
     return `Currently viewing the Skills section. Full Details:
 ● Programming Languages: Java, Python, JavaScript, TypeScript, C++
