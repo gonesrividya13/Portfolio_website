@@ -162,7 +162,7 @@ export const CutePlanet = () => {
       </group>
 
       <group ref={starsRef}>
-        <Stars radius={50} depth={50} count={2000} factor={4} saturation={0} fade speed={1} />
+        <Stars radius={50} depth={50} count={1000} factor={4} saturation={0} fade speed={1} />
       </group>
 
       {/* Floating Clouds during Day */}
@@ -197,7 +197,7 @@ export const CutePlanet = () => {
       {/* The Rotating Planet and Stationary Car */}
       <group position={[0, -radius, 0]}>
         <group ref={planetRef}>
-          <Sphere args={[radius, 64, 64]} receiveShadow>
+          <Sphere args={[radius, 32, 32]} receiveShadow>
             <meshStandardMaterial color="#86efac" roughness={0.9} />
           </Sphere>
           

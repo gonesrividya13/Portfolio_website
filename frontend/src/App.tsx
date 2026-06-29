@@ -21,8 +21,10 @@ function App() {
   const [isPlayClicked, setIsPlayClicked] = useState(false);
   const [isUIHidden, setIsUIHidden] = useState(false);
   
+  const [isStartedWithoutAudio, setIsStartedWithoutAudio] = useState(false);
+  
   // The actual scroll distance and UI cards freeze until the AI has spoken its first message
-  const hasStarted = hasSpokenOnce;
+  const hasStarted = hasSpokenOnce || isStartedWithoutAudio;
   const distance = useInfiniteScroll(hasStarted);
   
   const idleTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -187,12 +189,20 @@ function App() {
               For the best experience, interact with my live persona along the journey. Turn on your microphone to chat with me!
             </p>
             {!isPlayClicked ? (
-              <button
-                onClick={startJourney}
-                className="px-8 py-4 bg-indigo-600 hover:bg-indigo-500 text-white rounded-full font-bold text-lg transition-transform hover:scale-105 active:scale-95 shadow-lg shadow-indigo-500/30 cursor-pointer"
-              >
-                Play & Start Journey
-              </button>
+              <div className="flex flex-col sm:flex-row items-center gap-4">
+                <button
+                  onClick={startJourney}
+                  className="px-8 py-4 bg-indigo-600 hover:bg-indigo-500 text-white rounded-full font-bold text-lg transition-transform hover:scale-105 active:scale-95 shadow-lg shadow-indigo-500/30 cursor-pointer"
+                >
+                  Start With Audio
+                </button>
+                <button
+                  onClick={() => setIsStartedWithoutAudio(true)}
+                  className="px-8 py-4 bg-slate-700/50 hover:bg-slate-600/50 text-white rounded-full font-bold text-lg transition-transform hover:scale-105 active:scale-95 shadow-lg shadow-slate-900/30 cursor-pointer border border-white/10"
+                >
+                  Start Without Audio
+                </button>
+              </div>
             ) : (
               <div className="flex flex-col items-center gap-4">
                 <div className="w-8 h-8 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin"></div>
