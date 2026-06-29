@@ -11,6 +11,7 @@ import type { Project, Skill, Experience } from './types';
 import { useInfiniteScroll } from './hooks/useInfiniteScroll';
 import { useIsMobile } from './hooks/useIsMobile';
 import { getResumeContextForSection } from './context/resumeContext';
+import { scrollStore } from './store';
 
 import { ScrollCard } from './components/ScrollCard';
 import { Navbar } from './components/Navbar';
@@ -88,7 +89,8 @@ function App() {
 
   useEffect(() => {
     if (!hasStarted) return;
-    if (!hasStarted) return;
+    if (isUIHidden) return;
+    if (scrollStore.getIsNavigating()) return;
     
     // Calculate active Portfolio Section
     const normalizedDistance = ((distance % LOOP_LENGTH) + LOOP_LENGTH) % LOOP_LENGTH;
@@ -114,7 +116,7 @@ function App() {
       sendMessage(message, true);
       resetIdleTimer();
     }
-  }, [distance, isUserSpeaking, sendMessage, hasStarted, resetIdleTimer]);
+  }, [distance, isUserSpeaking, sendMessage, hasStarted, resetIdleTimer, isUIHidden]);
   
   const [projects, setProjects] = useState<Project[]>([]);
   const [skills, setSkills] = useState<Skill[]>([]);
