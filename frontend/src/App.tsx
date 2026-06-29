@@ -84,7 +84,6 @@ function App() {
   const LOOP_LENGTH = 10.0;
 
   const lastTelemetryRef = useRef<string | number>('');
-  const visitedSectionsRef = useRef<Set<string>>(new Set());
   const prevUserSpeakingRef = useRef<boolean>(false);
 
   useEffect(() => {
@@ -100,13 +99,10 @@ function App() {
 
     let shouldSendTelemetry = false;
 
-    // Only trigger telemetry the FIRST time they enter a new section
+    // Only trigger telemetry when entering a new section
     if (currentSection !== lastTelemetryRef.current) {
       lastTelemetryRef.current = currentSection;
-      if (!visitedSectionsRef.current.has(currentSection)) {
-        visitedSectionsRef.current.add(currentSection);
-        shouldSendTelemetry = true;
-      }
+      shouldSendTelemetry = true;
     }
     
     prevUserSpeakingRef.current = isUserSpeaking;
