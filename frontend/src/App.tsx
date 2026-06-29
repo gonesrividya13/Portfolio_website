@@ -9,6 +9,7 @@ import { getProjects, getSkills, getExperiences } from './services/api';
 import type { Project, Skill, Experience } from './types';
 import { Scroll3DCanvas } from './components/Scroll3DCanvas';
 import { useInfiniteScroll } from './hooks/useInfiniteScroll';
+import { useIsMobile } from './hooks/useIsMobile';
 
 import { ScrollCard } from './components/ScrollCard';
 import { Skills } from './components/Skills';
@@ -55,19 +56,26 @@ function App() {
     ['#e0f2fe', '#fecdd3', '#1e1b4b', '#020617', '#e0f2fe'] // Day -> Sunset -> Night -> Sunrise -> Day
   );
 
+  const isMobile = useIsMobile();
+
   useEffect(() => {
     // 1.0 is a full cycle (syncs with CutePlanet.tsx)
     const cycle = (distance * 0.5) % 1.0;
     const normalizedCycle = cycle < 0 ? 1.0 + cycle : cycle;
-    motionDistance.set(normalizedCycle);
-
-    // Toggle Tailwind dark mode based on time of day
-    if (normalizedCycle > 0.20 && normalizedCycle < 0.80) {
-      document.documentElement.classList.add('dark');
-    } else {
+    
+    if (isMobile) {
+      motionDistance.set(0);
       document.documentElement.classList.remove('dark');
+    } else {
+      motionDistance.set(normalizedCycle);
+      // Toggle Tailwind dark mode based on time of day
+      if (normalizedCycle > 0.20 && normalizedCycle < 0.80) {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
     }
-  }, [distance, motionDistance]);
+  }, [distance, motionDistance, isMobile]);
 
   // Total length of the scrolling timeline before it loops back to the Intro
   const LOOP_LENGTH = 10.0;

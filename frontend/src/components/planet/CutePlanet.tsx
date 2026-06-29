@@ -6,6 +6,7 @@ import { KenneyProp } from './KenneyProp';
 import { Car } from './Car';
 import { generatePlanetScenery, getPathFrame } from '../../utils/planetEngine';
 import { scrollStore } from '../../store';
+import { useIsMobile } from '../../hooks/useIsMobile';
 
 export const CutePlanet = () => {
   const planetRef = useRef<THREE.Group>(null);
@@ -21,6 +22,8 @@ export const CutePlanet = () => {
   const sunsetColor = useMemo(() => new THREE.Color('#ffaa55'), []);
   const nightColor = useMemo(() => new THREE.Color('#312e81'), []);
   const currentColor = useMemo(() => new THREE.Color(), []);
+  
+  const isMobile = useIsMobile();
 
   const radius = 8;
   const buildingElevation = radius;
@@ -59,7 +62,7 @@ export const CutePlanet = () => {
     const normalizedCycle = cycle < 0 ? 1.0 + cycle : cycle; // handle negative scrolling
 
     // Calculate time of day (0 to 1) -> 0=Midday, 0.25=Sunset, 0.5=Midnight, 0.75=Sunrise
-    const angle = normalizedCycle * Math.PI * 2;
+    const angle = isMobile ? 0 : normalizedCycle * Math.PI * 2;
     
     // Calculate explicit positions for Sun and Moon in a PERFECT circle to match planetary curvature.
     // By lowering the center of the orbit and pushing it deep (Z = -40), 
@@ -80,8 +83,14 @@ export const CutePlanet = () => {
       const sunMesh = skyRef.current.children[1];
       const moonMesh = skyRef.current.children[2];
       
-      if (sunMesh) sunMesh.position.set(sunX, sunY, bgZ);
-      if (moonMesh) moonMesh.position.set(moonX, moonY, bgZ);
+      if (sunMesh) {
+        sunMesh.visible = !isMobile;
+        sunMesh.position.set(sunX, sunY, bgZ);
+      }
+      if (moonMesh) {
+        moonMesh.visible = !isMobile;
+        moonMesh.position.set(moonX, moonY, bgZ);
+      }
       
       // Light follows the sun, or if sun is below horizon, light turns off (intensity drops anyway)
     }
