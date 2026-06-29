@@ -19,12 +19,12 @@ export const useInfiniteScroll = (enabled: boolean = true) => {
         
         // If the active card has room to scroll
         if ((isScrollingDown && !isAtBottom) || (!isScrollingDown && !isAtTop)) {
-          // If hovering over the card, let the browser handle it natively (for perfect mobile/trackpad physics)
+          // If hovering inside the card, let the browser handle the scroll natively
           if (scrollContainer.contains(e.target as Node)) {
             return;
           } else {
-            // If hovering outside, manually forward the scroll to the card at 1:1 speed
-            scrollContainer.scrollTop += e.deltaY;
+            // If hovering outside, manually forward the scroll to the card
+            scrollContainer.scrollTop += e.deltaY * 0.1;
             e.preventDefault();
             return;
           }
@@ -63,7 +63,7 @@ export const useInfiniteScroll = (enabled: boolean = true) => {
             return;
           } else {
             // Manually scroll if dragging outside the card
-            scrollContainer.scrollTop += deltaY;
+            scrollContainer.scrollTop += deltaY * 0.1;
             touchStartY = currentY;
             e.preventDefault();
             return;
