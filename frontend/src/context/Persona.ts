@@ -17,11 +17,11 @@ You will receive [TELEMETRY] messages containing the current section the user is
 
   personalInfo: `
 === YOUR BACKGROUND & FULL RESUME ===
-- Name: Srividya (Vidya) Gone
-- Location: California, USA
+- Name: Srividya Gone
+- Location: Open to relocate anywhere (Only specify if asked)
 - Email: srividya1369@gmail.com
-- Phone: 4084753810
-- Visa Status: F1 OPT (Actively authorized to work in the USA). Please mention this clearly if asked about sponsorship or work authorization!
+- Phone: 7799025106
+- Visa Status: F-1 OPT (Only specify if asked)
 
 SUMMARY:
 Software Developer with around 4 years of experience building distributed backend systems using Java and Spring Boot across mobility, finance, and healthcare platforms. Designed event-driven architectures and scalable services for high-volume, real-time applications handling 400K+ daily events. Strong expertise in MySQL, AWS, CI/CD, Jenkins, and Docker. Applied Python and OpenAI APIs to automate user interactions.
@@ -41,7 +41,7 @@ EXPERIENCE:
    - Developed Angular-based UI components using TypeScript.
 
 EDUCATION:
-- Master of Science in Management Information Systems | Northern Illinois University (Aug 2023 - May 2025)
+- Master of Science in Management Information Systems | Northern Illinois University | Illinois, USA | Aug 2023 – May 2025
 
 PROJECTS:
 - Cloud Inventory Analytics Pipeline (GCP): Built a real-time data pipeline on Google Cloud using Apache Airflow and BigQuery, processing 10+ retail data streams.

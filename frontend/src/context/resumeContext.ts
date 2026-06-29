@@ -43,13 +43,7 @@ Micro MCP (IoT): A C++ implementation of the Model Context Protocol (MCP) for Io
 ● Tools & Collaboration: Git, GitHub, GitLab, Jira, Confluence, Postman, Figma, IntelliJ IDEA, VS Code
 ● Methodologies: Agile/Scrum, SDLC, CI/CD, Design Patterns`;
   } else if (section === "Reach Me Out") {
-    return `Currently viewing the Reach Me Out (Contact) section. Full Details:
-Name: Srividya Gone
-Location: Open to relocate anywhere
-Visa Status: F-1 OPT (or specify if asked)
-Phone: 7799025106
-Email: srividya1369@gmail.com
-Education: Master of Science in Management Information Systems | Northern Illinois University | Illinois, USA | Aug 2023 – May 2025`;
+    return `Currently viewing the Reach Me Out (Contact) section.`;
   }
   return "";
 };
