@@ -54,18 +54,18 @@ export const About: React.FC = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.4, duration: 0.6 }}
-            className="mt-12 grid grid-cols-2 gap-6 sm:grid-cols-3"
+            className="mt-12 flex flex-wrap gap-8 sm:gap-10"
           >
-            <div>
-              <p className="text-4xl font-semibold text-black dark:text-white">4</p>
+            <div className="min-w-[140px]">
+              <p className="text-3xl sm:text-4xl font-semibold text-black dark:text-white">4</p>
               <p className="mt-2 text-sm text-black dark:text-white">Years experience</p>
             </div>
-            <div>
-              <p className="text-4xl font-semibold text-black dark:text-white">400K+</p>
+            <div className="min-w-[140px]">
+              <p className="text-3xl sm:text-4xl font-semibold text-black dark:text-white">400K+</p>
               <p className="mt-2 text-sm text-black dark:text-white">Daily events processed</p>
             </div>
-            <div>
-              <p className="text-4xl font-semibold text-black dark:text-white">100K+</p>
+            <div className="min-w-[140px]">
+              <p className="text-3xl sm:text-4xl font-semibold text-black dark:text-white">100K+</p>
               <p className="mt-2 text-sm text-black dark:text-white">Daily API requests</p>
             </div>
           </motion.div>
