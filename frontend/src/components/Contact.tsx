@@ -79,8 +79,8 @@ export const Contact: React.FC = () => {
   };
 
   return (
-    <section id="contact" className="py-8 sm:py-12 border-t border-black/10 dark:border-slate-800/60 bg-black/5 dark:bg-slate-900/10">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="contact" className="min-h-screen flex items-center justify-center py-8 sm:py-12 border-t border-black/10 dark:border-slate-800/60 bg-black/5 dark:bg-slate-900/10">
+      <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Title */}
         <div className="text-center max-w-3xl mx-auto mb-8">
           <h2 className="text-3xl sm:text-4xl font-extrabold text-black dark:text-white tracking-tight">
